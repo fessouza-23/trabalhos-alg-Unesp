@@ -79,7 +79,6 @@ void trocarLinhas(int v[][100], int m, int n) {
 void matrizSimetrica(int v[][100], int n, int m) {
     int i, j;
 
-    system("cls");
     for (i = 0; i < m; i++) {
         for (j = 0; j < n; j++) {
             if (v[i][j] != v[j][i]) {
@@ -90,6 +89,54 @@ void matrizSimetrica(int v[][100], int n, int m) {
         }
     }
     printf("Matriz eh simetrica!\n");
+    system("pause");
+}
+
+void quadradoMagico(int v[][100], int n, int m) {
+    int soma, i, j;
+    int somaDiagonalPrincipal = 0;
+    int somaDiagonalSecundaria = 0;
+
+    // Verificar soma das linhas
+    for (i = 0; i < m; i++) {
+        soma = 0;
+        for (j = 0; j < n; j++) {
+            soma += v[i][j];
+        }
+        if (soma != 15) {
+            printf("Nao eh quadrado magico!\n");
+            system("pause");
+            return;
+        }
+    }
+
+    for (j = 0; j < n; j++) {
+        soma = 0;
+        for (i = 0; i < m; i++) {
+            soma += v[i][j];
+        }
+        if (soma != 15) {
+            printf("Nao eh quadrado magico!\n");
+            system("pause");
+            return;
+        }
+    }
+
+    for (i = 0; i < m; i++) {
+        somaDiagonalPrincipal += v[i][i];
+    }
+
+    for (i = 0; i < m; i++) {
+        somaDiagonalSecundaria += v[i][m - i - 1];
+    }
+
+    if (somaDiagonalPrincipal != 15 || somaDiagonalSecundaria != 15) {
+        printf("Nao eh quadrado magico!\n");
+        system("pause");
+        return;
+    }
+
+    printf("Eh quadrado magico!\n");
     system("pause");
 }
 
@@ -111,9 +158,8 @@ void menu(int v[][100], int m, int n) {
         printf("9 - Verificar se uma matriz eh matriz de permutacao\n");
         printf("F1 - Help\n");
         printf("ESC - Sair\n\n");
-
-        printf("Comando: ");
         c = getch();
+
         if ((c < '1' || c > '8') && c != esc && c != 112) {
             printf("Valor invalido.\n");
             system("pause");
@@ -150,8 +196,7 @@ void menu(int v[][100], int m, int n) {
                 break;
 
             case '7':
-                printf("Funcao nao implementada.\n");
-                system("pause");
+                quadradoMagico(v,m, n);
                 break;
 
             case '8':
@@ -164,8 +209,8 @@ void menu(int v[][100], int m, int n) {
                 system("pause");
                 break;
 
-            default:
-                printf("Comando desconhecido!\n");
+            case 112:
+                printf("serase\n");
                 system("pause");
                 break;
         }
