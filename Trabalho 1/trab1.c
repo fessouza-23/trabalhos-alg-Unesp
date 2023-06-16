@@ -140,7 +140,6 @@ void quadradoMagico(int v[][100], int n, int m) {
     system("pause");
 }
 
-
 void menu(int v[][100], int m, int n) {
     char c;
 
@@ -160,7 +159,7 @@ void menu(int v[][100], int m, int n) {
         printf("ESC - Sair\n\n");
         c = getch();
 
-        if ((c < '1' || c > '8') && c != esc && c != 112) {
+        if ((c < '1' || c > '9') && c != esc && c != 0) {
             printf("Valor invalido.\n");
             system("pause");
         }
@@ -196,22 +195,24 @@ void menu(int v[][100], int m, int n) {
                 break;
 
             case '7':
-                quadradoMagico(v,m, n);
+                quadradoMagico(v, m, n);
                 break;
 
             case '8':
                 printf("Funcao nao implementada.\n");
                 system("pause");
                 break;
-            
+
             case '9':
                 printf("Funcao nao implementada.\n");
                 system("pause");
                 break;
 
-            case 112:
-                printf("serase\n");
-                system("pause");
+            case 0:
+                if (getch() == 59) {
+                    printf("Help\n");
+                    system("pause");
+                }
                 break;
         }
     } while (c != esc);
