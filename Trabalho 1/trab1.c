@@ -78,6 +78,7 @@ void menu(int v[][100], int m, int n) {
             case '1':
                 lerDimensao(&m, &n);
                 lerMatriz(v, m, n);
+                mostrarMatriz(v, m, n);
                 menu(v, m, n);
                 break;
     
@@ -107,58 +108,26 @@ void menu(int v[][100], int m, int n) {
                 break;
 
             case '4':
-                printf("Digite o valor da coluna X: ");
-                scanf("%d", &colunaX);
-                printf("Digite o valor da coluna Y: ");
-                scanf("%d", &colunaY);
-                // Swap the elements of column X and column Y in the matrix
-                if (colunaX >= 0 && colunaX < n && colunaY >= 0 && colunaY < n) {
-                    int temp;
-                    for (int i = 0; i < m; i++) {
-                        temp = v[i][colunaX];
-                        v[i][colunaX] = v[i][colunaY];
-                        v[i][colunaY] = temp;
-                    }
-                    printf("Colunas trocadas com sucesso.\n");
-                } else {
-                    printf("Valores de coluna invalidos.\n");
-                }
+                printf("Funcao nao implementada.\n");
                 system("pause");
                 break;
 
             case '5':
-                // Swap the elements of the main diagonal with the secondary diagonal
-                if (m == n) {
-                    int temp;
-                    for (int i = 0; i < m; i++) {
-                        temp = v[i][i];
-                        v[i][i] = v[i][n - 1 - i];
-                        v[i][n - 1 - i] = temp;
-                    }
-                    printf("Diagonais trocadas com sucesso.\n");
-                } else {
-                    printf("A matriz nao eh quadrada.\n");
-                }
+                printf("Funcao nao implementada.\n");
                 system("pause");
                 break;
 
             case '6':
-                // Check if the matrix is a magic square
-                // (not implemented in this code snippet)
                 printf("Funcao nao implementada.\n");
                 system("pause");
                 break;
 
             case '7':
-                // Check if the matrix is a Latin square
-                // (not implemented in this code snippet)
                 printf("Funcao nao implementada.\n");
                 system("pause");
                 break;
 
             case '8':
-                // Check if the matrix is a permutation matrix
-                // (not implemented in this code snippet)
                 printf("Funcao nao implementada.\n");
                 system("pause");
                 break;
