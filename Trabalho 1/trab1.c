@@ -12,14 +12,16 @@ void lerDimensao(int *m, int *n) {
         printf("Digite a quantidade de linhas: ");
         scanf("%d", m);
 
-        if (*m <= 0) printf("Valor invalido.\n");
+        if (*m <= 0)
+            printf("Valor invalido.\n");
     } while (*m <= 0);
 
     do {
         printf("Digite a quantidade de colunas: ");
         scanf("%d", n);
 
-        if (*n <= 0) printf("Valor invalido.\n");
+        if (*n <= 0)
+            printf("Valor invalido.\n");
     } while (*n <= 0);
 }
 
@@ -30,7 +32,7 @@ void lerMatriz(int v[][100], int m, int n) {
     printf("Matriz de dimensao %d x %d\n", m, n);
     for (i = 0; i < m; i++) {
         for (j = 0; j < n; j++) {
-            printf("Elemento[%d][%d]: ", i+1, j+1);
+            printf("Elemento[%d][%d]: ", i, j);
             scanf("%d", &v[i][j]);
         }
     }
@@ -43,15 +45,38 @@ void mostrarMatriz(int v[][100], int m, int n) {
     printf("MATRIZ: \n");
     for (i = 0; i < m; i++) {
         for (j = 0; j < n; j++) {
-            printf("%3d ", v[i][j]);
+            printf("%2d ", v[i][j]);
         }
         printf("\n");
     }
     system("pause");
 }
 
+void trocarLinhas(int v[][100], int m, int n) {
+    int linhaX, linhaY;
+
+    system("cls");
+    printf("Digite o valor da linha X: ");
+    scanf("%d", &linhaX);
+
+    printf("Digite o valor da linha Y: ");
+    scanf("%d", &linhaY);
+
+    if (linhaX >= 0 && linhaX < m && linhaY >= 0 && linhaY < m) {
+        int temp;
+        for (int j = 0; j < n; j++) {
+            temp = v[linhaX][j];
+            v[linhaX][j] = v[linhaY][j];
+            v[linhaY][j] = temp;
+        }
+        printf("Linhas trocadas com sucesso.\n");
+    } else {
+        printf("Valores de linha invalidos.\n");
+    }
+    system("pause");
+}
+
 void menu(int v[][100], int m, int n) {
-    int linhaX, linhaY, colunaX, colunaY;
     char c;
 
     do {
@@ -72,6 +97,7 @@ void menu(int v[][100], int m, int n) {
         c = getch();
         if ((c < '1' || c > '8') && c != esc && c != 112) {
             printf("Valor invalido.\n");
+            system("pause");
         }
 
         switch (c) {
@@ -79,32 +105,15 @@ void menu(int v[][100], int m, int n) {
                 lerDimensao(&m, &n);
                 lerMatriz(v, m, n);
                 mostrarMatriz(v, m, n);
-                menu(v, m, n);
                 break;
-    
+
             case '2':
                 mostrarMatriz(v, m, n);
-                menu(v, m, n);
                 break;
 
             case '3':
-                printf("Digite o valor da linha X: ");
-                scanf("%d", &linhaX);
-                printf("Digite o valor da linha Y: ");
-                scanf("%d", &linhaY);
-                // Swap the elements of line X and line Y in the matrix
-                if (linhaX >= 0 && linhaX < m && linhaY >= 0 && linhaY < m) {
-                    int temp;
-                    for (int j = 0; j < n; j++) {
-                        temp = v[linhaX][j];
-                        v[linhaX][j] = v[linhaY][j];
-                        v[linhaY][j] = temp;
-                    }
-                    printf("Linhas trocadas com sucesso.\n");
-                } else {
-                    printf("Valores de linha invalidos.\n");
-                }
-                system("pause");
+                trocarLinhas(v, m, n);
+                mostrarMatriz(v, m, n);
                 break;
 
             case '4':
@@ -137,9 +146,8 @@ void menu(int v[][100], int m, int n) {
                 system("pause");
                 break;
         }
-    } while ((c < '1' || c > '8') && c != esc && c != 112);
+    } while (c != esc);
 }
-
 
 int main() {
     int m, n;
@@ -147,6 +155,8 @@ int main() {
 
     int v[100][100];
     lerMatriz(v, m, n);
+
     menu(v, m, n);
+
     return 0;
 }
