@@ -76,6 +76,24 @@ void trocarLinhas(int v[][100], int m, int n) {
     system("pause");
 }
 
+void matrizSimetrica(int v[][100], int n, int m) {
+    int i, j;
+
+    system("cls");
+    for (i = 0; i < m; i++) {
+        for (j = 0; j < n; j++) {
+            if (v[i][j] != v[j][i]) {
+                printf("Matriz nao eh simetrica!\n");
+                system("pause");
+                return;
+            }
+        }
+    }
+    printf("Matriz eh simetrica!\n");
+    system("pause");
+}
+
+
 void menu(int v[][100], int m, int n) {
     char c;
 
@@ -87,9 +105,10 @@ void menu(int v[][100], int m, int n) {
         printf("3 - Trocar os elementos da linha X pela linha Y\n");
         printf("4 - Trocar os elementos da coluna X pela coluna Y\n");
         printf("5 - Trocar os elementos da diagonal principal com a diagonal secundaria\n");
-        printf("6 - Verifique se uma matriz eh um quadrado magico\n");
-        printf("7 - Verifique se uma matriz eh quadrado latino.\n");
-        printf("8 - Verifique se uma matriz eh matriz de permutacao\n");
+        printf("6 - Verificar se uma matriz eh simetrica\n");
+        printf("7 - Verificar se uma matriz eh um quadrado magico\n");
+        printf("8 - Verificar se uma matriz eh quadrado latino.\n");
+        printf("9 - Verificar se uma matriz eh matriz de permutacao\n");
         printf("F1 - Help\n");
         printf("ESC - Sair\n\n");
 
@@ -127,8 +146,7 @@ void menu(int v[][100], int m, int n) {
                 break;
 
             case '6':
-                printf("Funcao nao implementada.\n");
-                system("pause");
+                matrizSimetrica(v, m, n);
                 break;
 
             case '7':
@@ -137,6 +155,11 @@ void menu(int v[][100], int m, int n) {
                 break;
 
             case '8':
+                printf("Funcao nao implementada.\n");
+                system("pause");
+                break;
+            
+            case '9':
                 printf("Funcao nao implementada.\n");
                 system("pause");
                 break;
