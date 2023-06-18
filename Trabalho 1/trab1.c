@@ -97,7 +97,6 @@ void quadradoMagico(int v[][100], int n, int m) {
     int somaDiagonalPrincipal = 0;
     int somaDiagonalSecundaria = 0;
 
-    // Verificar soma das linhas
     for (i = 0; i < m; i++) {
         soma = 0;
         for (j = 0; j < n; j++) {
@@ -138,6 +137,52 @@ void quadradoMagico(int v[][100], int n, int m) {
 
     printf("Eh quadrado magico!\n");
     system("pause");
+}
+
+void help() {
+    system("cls");
+    printf("================================  HELP  =======================================\n");
+    printf("Bem-vindo ao programa de manipulação de matrizes!\n");
+    printf("Neste programa, você pode criar uma matriz, realizar diversas operações e verificar algumas propriedades.\n");
+    printf("Aqui está um guia sobre as opções disponíveis:\n\n");
+    printf("1. Gerar nova matriz:\n");
+    printf("   - Permite criar uma nova matriz com dimensões especificadas.\n");
+    printf("   - Você será solicitado a informar o número de linhas e colunas da matriz.\n");
+    printf("   - Em seguida, insira os elementos da matriz.\n\n");
+    printf("2. Mostrar matriz:\n");
+    printf("   - Exibe a matriz atualmente armazenada no programa.\n\n");
+    printf("3. Trocar os elementos de duas linhas:\n");
+    printf("   - Permite trocar os elementos de duas linhas da matriz.\n");
+    printf("   - Você será solicitado a fornecer os números das linhas que deseja trocar.\n\n");
+    printf("4. Trocar os elementos de duas colunas:\n");
+    printf("   - Permite trocar os elementos de duas colunas da matriz.\n");
+    printf("   - Você será solicitado a fornecer os números das colunas que deseja trocar.\n\n");
+    printf("5. Trocar os elementos da diagonal principal com a diagonal secundária:\n");
+    printf("   - Permite trocar os elementos da diagonal principal com a diagonal secundária da matriz.\n");
+    printf("   - Esta opção altera a configuração dos elementos na matriz.\n\n");
+    printf("6. Verificar se uma matriz é simétrica:\n");
+    printf("   - Verifica se a matriz é simétrica em relação à sua diagonal principal.\n");
+    printf("   - Uma matriz simétrica tem a propriedade de que os elementos a[i][j] são iguais aos elementos a[j][i].\n");
+    printf("   - Se a matriz for simétrica, a mensagem 'A matriz é simétrica!' será exibida.\n");
+    printf("   - Caso contrário, será exibida a mensagem 'A matriz não é simétrica!'\n\n");
+    printf("7. Verificar se uma matriz é um quadrado mágico:\n");
+    printf("   - Verifica se a matriz é um quadrado mágico.\n");
+    printf("   - Um quadrado mágico é uma matriz quadrada em que a soma dos elementos de cada linha, cada coluna e ambas as diagonais é a mesma.\n");
+    printf("   - Para um quadrado mágico 3x3, a soma deve ser igual a 15.\n");
+    printf("   - Se a matriz for um quadrado mágico, a mensagem 'A matriz é um quadrado mágico!' será exibida.\n");
+    printf("   - Caso contrário, será exibida a mensagem 'A matriz não é um quadrado mágico!'\n\n");
+    printf("8. Verificar se uma matriz é um quadrado latino:\n");
+    printf("   - Verifica se a matriz é um quadrado latino.\n");
+    printf("   - Um quadrado latino é uma matriz quadrada em que cada linha e cada coluna contêm elementos distintos.\n");
+    printf("   - Se a matriz for um quadrado latino, a mensagem 'A matriz é um quadrado latino!' será exibida.\n");
+    printf("   - Caso contrário, será exibida a mensagem 'A matriz não é um quadrado latino!'\n\n");
+    printf("9. Verificar se uma matriz é uma matriz de permutação:\n");
+    printf("   - Verifica se a matriz é uma matriz de permutação.\n");
+    printf("   - Uma matriz de permutação é uma matriz quadrada em que cada linha e cada coluna contêm exatamente um elemento igual a 1 e os demais elementos são iguais a 0.\n");
+    printf("   - Se a matriz for uma matriz de permutação, a mensagem 'A matriz é uma matriz de permutação!' será exibida.\n");
+    printf("   - Caso contrário, será exibida a mensagem 'A matriz não é uma matriz de permutação!'\n\n");
+    printf("Pressione qualquer tecla para voltar ao menu.\n");
+    getch();
 }
 
 void menu(int v[][100], int m, int n) {
@@ -210,8 +255,7 @@ void menu(int v[][100], int m, int n) {
 
             case 0:
                 if (getch() == 59) {
-                    printf("Help\n");
-                    system("pause");
+                    help();
                 }
                 break;
         }
