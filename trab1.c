@@ -101,7 +101,7 @@ void trocarLinhas(int v[][100], int m, int n) {
     int linhaX, linhaY;
 
     system("cls");
-    printf("OBS: USAR '0' PARA ESCOLHER A 1a LINHA");
+    printf("OBS: USAR '0' PARA ESCOLHER A 1a LINHA\n");
     printf("Digite o valor da linha X: ");
     scanf("%d", &linhaX);
 
@@ -126,7 +126,7 @@ void trocarColunas(int v[][100], int m, int n) {
     int colunaX, colunaY;
 
     system("cls");
-    printf("OBS: USAR '0' PARA ESCOLHER A 1a COLUNA");
+    printf("OBS: USAR '0' PARA ESCOLHER A 1a COLUNA\n");
     printf("Digite o valor da coluna X: ");
     scanf("%d", &colunaX);
 
