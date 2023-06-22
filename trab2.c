@@ -210,7 +210,6 @@ void versusComputer() {
             gameOver = 1;
             }
         }
-    system("cls");
     printBoard(board);
     printf("Fim do jogo!\n");
     system("pause");
@@ -255,7 +254,6 @@ void versusHuman() {
             gameOver = 1;
             }
         }
-    system("cls");
     printBoard(board);
     printf("Fim do jogo!\n");
     system("pause");
