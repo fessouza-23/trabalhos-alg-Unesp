@@ -138,17 +138,20 @@ void atualizarCliente() {
         gets(c.fone);
         fseek(file, -sizeof(Cliente), SEEK_CUR);
         fwrite(&c, sizeof(Cliente), 1, file);
+        fclose(file);
         achou = 1;
+      } else {
+        achou = 2;
+        break;
       }
     }
   }
-
-  fclose(file);
-
   if (!achou) {
     printf("Cliente nao encontrado!\n");
+  } else if(achou == 2) {
+    printf("Cliente nao alterado!\n");
   } else {
-    printf("Cliente atualizado com sucesso!\n");
+    printf("Cliente alterado com sucesso!\n");
   }
   printf("\nPressione qualquer tecla para voltar ao menu.\n");
   getch();
