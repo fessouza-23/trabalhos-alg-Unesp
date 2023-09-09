@@ -24,6 +24,11 @@ typedef struct {
   char fone[21];
 } Cliente;
 
+int cod_gen = 0; // Variável para gerar código para cadastro de clientes
+
+/* Função para abrir arquivo e evitar repetição de código,
+ funciona criando variavel do tipo FILE e usando: arquivo = abrirArquivo(nome_arquivo, op);
+ op é a forma que deseja abrir o arquivo (rb, wb, ab)*/
 FILE *abrirArquivo(const char nome_arquivo[20], const char op[5]) {
   FILE *file;
   if ((file = fopen(nome_arquivo, op)) == NULL) {
@@ -60,8 +65,7 @@ void cadastrarCliente() {
 
   system("cls");
   printf("CADASTRO DE NOVO CLIENTE\n");
-  printf("Codigo: ");
-  scanf("%d", &c.codigo);
+  c.codigo = cod_gen++;
   fflush(stdin);
   printf("Nome: ");
   fgets(c.nome, sizeof(c.nome), stdin);
@@ -82,7 +86,8 @@ void cadastrarCliente() {
   fclose(file);
 }
 
-// Esta função não está dentro das necessárias, serve apenas para testar
+/* Esta função não está dentro das necessárias,
+ serve apenas para testar se o codigo esta funcionando corretamente */
 void consultarCliente() {
   FILE *file;
   Cliente c;
