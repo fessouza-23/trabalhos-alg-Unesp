@@ -27,7 +27,7 @@ typedef struct {
 int cod_gen = 0; // Variável para gerar código para cadastro de clientes
 
 /* Função para abrir arquivo e evitar repetição de código,
- funciona criando variavel do tipo FILE e usando: arquivo = abrirArquivo(nome_arquivo, op);
+ funciona criando variavel do tipo FILE e usando: arquivo = abrirArquivo(nome_arquivo, op); 
  op é a forma que deseja abrir o arquivo (rb, wb, ab)*/
 FILE *abrirArquivo(const char nome_arquivo[20], const char op[5]) {
   FILE *file;
@@ -110,7 +110,8 @@ void consultarCliente() {
 
 void atualizarCliente() {
   FILE *file;
-  int codigo_ref; // Código de referência = código digitado para procurar o cliente
+  int codigo_ref; // Código de referência = código digitado para procurar o
+                  // cliente
   Cliente c;
   int achou = 0;
 
@@ -153,7 +154,7 @@ void atualizarCliente() {
   }
   if (!achou) {
     printf("Cliente nao encontrado!\n");
-  } else if(achou == 2) {
+  } else if (achou == 2) {
     printf("Cliente nao alterado!\n");
   } else {
     printf("Cliente alterado com sucesso!\n");
