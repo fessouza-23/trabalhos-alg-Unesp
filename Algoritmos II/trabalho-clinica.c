@@ -163,7 +163,7 @@ void atualizarCliente() {
   getch();
 }
 
-void menu(Cliente *c) {
+void menu() {
   char op;
 
   do {
@@ -178,7 +178,7 @@ void menu(Cliente *c) {
 
     switch (op) {
     case '1':
-      cadastrarCliente(c);
+      cadastrarCliente();
       break;
 
     case '2':
@@ -186,7 +186,7 @@ void menu(Cliente *c) {
       break;
 
     case '3':
-      atualizarCliente(c);
+      atualizarCliente();
       break;
 
     case f1:
@@ -198,6 +198,6 @@ void menu(Cliente *c) {
 
 int main() {
   Cliente c;
-  menu(&c);
+  menu();
   return 0;
 }
