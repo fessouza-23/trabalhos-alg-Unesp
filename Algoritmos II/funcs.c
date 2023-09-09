@@ -6,6 +6,8 @@
 
 #include "funcs.h"
 
+int cod_gen = 0;
+
 FILE *abrirArquivo(const char nome_arquivo[20], const char op[5]) {
     FILE *file;
     
@@ -48,11 +50,11 @@ void cadastrarCliente() {
     file = abrirArquivo("clientes.dat", "ab");
 
     printf("CADASTRO DE NOVO CLIENTE\n");
-    printf("Codigo: ");
-    scanf("%d", &c.codigo);
+    c.codigo = cod_gen++;
+    fflush(stdin); // limpa o buffer
 
-    //Usado para limpar o buffer, nao apagar
-    while (getchar() != '\n');
+    // Usado para limpar o buffer, nao apagar
+    // while (getchar() != '\n');
 
     printf("Nome: ");
     fgets(c.nome, sizeof(c.nome), stdin);
@@ -104,7 +106,7 @@ void atualizarCliente() {
     FILE *file;
     int codigo_ref; // Código de referência = código digitado para procurar o cliente
     Cliente c;
-    int achou = 0;
+    int flag = 0;
 
     printf("Digite o codigo do cliente: ");
     scanf("%d", &codigo_ref);
@@ -143,15 +145,18 @@ void atualizarCliente() {
 
                     fseek(file, -sizeof(Cliente), SEEK_CUR);
                     fwrite(&c, sizeof(Cliente), 1, file);
-                    achou = 1;
+                    fclose(file);
+                    flag = 1;
+            } else {
+                flag = 2;
             }
         }
     }
 
-    fclose(file);
-
-    if (!achou) {
+    if (!flag) {
         printf("Cliente nao encontrado!\n");
+    } else if(flag == 2) {
+        printf("Cliente nao alterado!\n");
     } else {
         printf("Cliente atualizado com sucesso!\n");
     }
@@ -219,7 +224,7 @@ void desmarcarConsulta() {
 
     FILE *file;
     Consulta consulta;
-    int numero, achou = 0;
+    int numero, flag = 0;
 
     printf("Digite o codigo da consulta que deseja desmarcar: ");
     scanf("%d", &numero);
@@ -246,12 +251,12 @@ void desmarcarConsulta() {
             } else {
                 printf("Consulta de codigo %d nao pode ser removida", &consulta.codigo);
             }
-            achou = 1;
+            flag = 1;
             break;
         }
     }
 
-    if (!achou) {
+    if (!flag) {
         printf("Nao existe consulta com esse codigo\n");
     }
 
