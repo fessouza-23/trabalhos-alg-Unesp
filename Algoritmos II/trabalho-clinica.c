@@ -1,7 +1,7 @@
 
 /*
 Trabalho de Algoritmos II - Gerenciamento de Clinica
-a partir de Manipulação de arquivos binarios
+a partir de manipulação de arquivos binarios
 realizado por:
  - João Victor Fernandes Souza
  - Eduardo Teixeira
@@ -16,13 +16,12 @@ realizado por:
 
 #define esc 27
 #define f1 59
-
 typedef struct {
   int codigo;
   char nome[50];
   int idade;
   char endereco[50];
-  char fone[50];
+  char fone[21];
 } Cliente;
 
 FILE *abrirArquivo(const char nome_arquivo[20], const char op[5]) {
@@ -39,7 +38,7 @@ int confirma() {
   do {
     resp = toupper(getch());
   } while (resp != 'S' && resp != 'N');
-  
+
   return (resp == 'S') ? 1 : 0;
 }
 
@@ -47,7 +46,8 @@ void sobre() {
   system("cls");
   printf("================================  SOBRE O PROGRAMA  "
          "=======================================\n");
-  printf("Programa desenvolvido por Eduardo R. Teixeira, Joao V. F. Souza, Gabriel Rasi e Guilherme S.\n"
+  printf("Programa desenvolvido por Eduardo R. Teixeira, Joao V. F. Souza, "
+         "Gabriel Rasi e Guilherme S.\n"
          "Disciplina de Algoritmos II do curso de BSI\n");
   printf("Criado em 2023\n");
   printf("\nPressione qualquer tecla para voltar ao menu.\n");
@@ -61,8 +61,8 @@ void cadastrarCliente() {
   system("cls");
   printf("CADASTRO DE NOVO CLIENTE\n");
   printf("Codigo: ");
-  scanf("%d", &c.codigo); // Corrigido: Use c.codigo em vez de &c->codigo
-  fflush(stdin);          // Limpa o buffer de entrada
+  scanf("%d", &c.codigo);
+  fflush(stdin);
   printf("Nome: ");
   fgets(c.nome, sizeof(c.nome), stdin);
   c.nome[strlen(c.nome) - 1] = '\0';
@@ -77,21 +77,17 @@ void cadastrarCliente() {
   c.fone[strlen(c.fone) - 1] = '\0';
 
   // Gravação do Cliente no arquivo
-  file = abrirArquivo(
-      "clientes.dat",
-      "ab"); // Modificado para "ab" para adicionar ao arquivo binário
-  fwrite(&c, sizeof(Cliente), 1, file); // Corrigido: Use &c em vez de c
+  file = abrirArquivo("clientes.dat", "ab");
+  fwrite(&c, sizeof(Cliente), 1, file);
   fclose(file);
 }
 
-// Esta função não está dentro as necessárias, serve apenas para testar
+// Esta função não está dentro das necessárias, serve apenas para testar
 void consultarCliente() {
   FILE *file;
   Cliente c;
 
   system("cls");
-
-  // Abra o arquivo para leitura
   file = abrirArquivo("clientes.dat", "rb");
 
   if (file == NULL) {
@@ -111,7 +107,7 @@ void atualizarCliente() {
   FILE *file;
   int codigo_ref; // Código de referência = código digitado para procurar o cliente
   Cliente c;
-  int achou = 0; // Variável para verificar se o cliente foi encontrado
+  int achou = 0;
 
   system("cls");
   printf("Digite o codigo do cliente: ");
@@ -147,7 +143,7 @@ void atualizarCliente() {
     }
   }
 
-  fclose(file); // Feche o arquivo após a busca
+  fclose(file);
 
   if (!achou) {
     printf("Cliente nao encontrado!\n");
