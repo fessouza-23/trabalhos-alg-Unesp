@@ -19,6 +19,8 @@ typedef struct {
     int  dia;
     int  mes; 
     int  ano;
+    int hora;
+    int minuto;
 } Consulta;
 
 FILE *abrirArquivo(const char nome_arquivo[20], const char op[5]);
@@ -40,6 +42,8 @@ void desmarcarConsulta();
 void listarConsultas();
 
 void desmarcarConsultaRemFis();
+
+void datasConsulta();
 
 void menu();
 

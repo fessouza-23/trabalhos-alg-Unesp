@@ -3,10 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "funcs.h"
-
-int cod_gen = 0;
 
 FILE *abrirArquivo(const char nome_arquivo[20], const char op[5]) {
     FILE *file;
@@ -46,11 +43,18 @@ void cadastrarCliente() {
 
     FILE *file;
     Cliente c;
+    int cod_gen = 0;
     
-    file = abrirArquivo("clientes.dat", "ab");
+    file = abrirArquivo("clientes.dat", "r+t");
 
     printf("CADASTRO DE NOVO CLIENTE\n");
-    c.codigo = cod_gen++;
+
+    while (fread(&c, sizeof(Cliente), 1, file) == 1) {
+        if(c.codigo == cod_gen)
+            cod_gen++;
+        if(c.codigo != cod_gen)
+            c.codigo = cod_gen;
+    }
     fflush(stdin); // limpa o buffer
 
     // Usado para limpar o buffer, nao apagar
@@ -189,6 +193,11 @@ void marcarConsulta() {
 
     while (getchar() != '\n');
 
+    printf("Digite o horario da consulta (HORA:MINUTO): \n");
+    scanf("%d:%d", &consulta.hora, &consulta.minuto);
+
+    while (getchar() != '\n');
+
     fwrite(&consulta, sizeof(Consulta), 1, file);
     fclose(file);
 
@@ -212,7 +221,7 @@ void listarConsultas() {
 
     while (fread(&consulta, sizeof(Consulta), 1, file) == 1) {
         if (consulta.existe)
-            printf("Codigo: %d Nome: %s %d/%d/%d\n", consulta.codigo, consulta.nomeDoCliente, consulta.dia, consulta.mes, consulta.ano);
+            printf("Codigo: %2d | Nome: %15s | Data: %2d/%d/%d | Horario: %2d:%d\n", consulta.codigo, consulta.nomeDoCliente, consulta.dia, consulta.mes, consulta.ano, consulta.hora, consulta.minuto);
     }
 
     fclose(file);
@@ -292,6 +301,48 @@ void desmarcarConsultaRemFis() {
     getch();
 }
 
+void datasConsulta(){
+    system("cls");
+
+    FILE *file;
+    Consulta consulta;
+    Cliente c;
+    int cod, cont = 0;
+    char aux[50];
+    
+    printf("Digite o codigo do cliente:\n");
+    scanf("%d",&cod);
+
+    file = abrirArquivo("clientes.dat", "rb");
+
+    while (fread(&c, sizeof(Cliente), 1, file) == 1) {
+        if(cod == c.codigo)
+        strcpy(aux, c.nome);
+    }
+
+    fclose(file);
+
+    file = abrirArquivo("consultas.dat", "rb");
+
+    if (file == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
+    while (fread(&consulta, sizeof(Consulta), 1, file) == 1) {
+        if (strcmp(aux, consulta.nomeDoCliente)==0){
+            printf("Codigo: %2d | Nome: %15s | Data: %2d/%d/%d | Horario: %2d:%d\n", consulta.codigo, consulta.nomeDoCliente, consulta.dia, consulta.mes, consulta.ano, consulta.hora, consulta.minuto);
+            cont++;
+        }
+    }
+
+    if(cont == 0)
+    printf("\nNenhuma consulta marcada com esse cliente! Verifique o codigo digitado ou marque uma nova consulta.\n");
+
+    fclose(file);
+    getch();
+}
+
 void menu() {
     char op;
     Cliente c;
@@ -309,6 +360,7 @@ void menu() {
         printf("4 - Marcar consulta\n");
         printf("5 - Listar consultas\n");
         printf("6 - Desmarcar consultas\n");
+        printf("8 - Listar consulta por cliente\n");
         op = getch();
 
         switch (op) {
@@ -335,6 +387,10 @@ void menu() {
             case '6':
                 desmarcarConsulta();
                 desmarcarConsultaRemFis();
+                break;
+
+            case '8':
+                datasConsulta();
                 break;
 
             case f1:
