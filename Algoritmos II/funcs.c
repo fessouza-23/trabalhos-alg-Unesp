@@ -45,20 +45,22 @@ void cadastrarCliente() {
     Cliente c;
     int cod_gen = 0;
     
-    file = abrirArquivo("clientes.dat", "r+t");
-
+    if ((file = fopen("clientes.dat", "r+b")) == NULL) {
+        file = fopen("clientes.dat", "wb");
+        c.codigo = 0;
+    }
+    else{
+        while (fread(&c, sizeof(Cliente), 1, file) == 1) {
+            if(c.codigo == cod_gen)
+                cod_gen++;
+            if(c.codigo != cod_gen)
+                c.codigo = cod_gen;
+        }
+    }
     printf("CADASTRO DE NOVO CLIENTE\n");
 
-    while (fread(&c, sizeof(Cliente), 1, file) == 1) {
-        if(c.codigo == cod_gen)
-            cod_gen++;
-        if(c.codigo != cod_gen)
-            c.codigo = cod_gen;
-    }
+    
     fflush(stdin); // limpa o buffer
-
-    // Usado para limpar o buffer, nao apagar
-    // while (getchar() != '\n');
 
     printf("Nome: ");
     fgets(c.nome, sizeof(c.nome), stdin);
