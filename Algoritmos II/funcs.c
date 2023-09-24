@@ -482,7 +482,7 @@ void consultasHa6Meses() {
     }
   }
 
-  if (cont == 0)
+  if (cont < 0)
     printf("\nNenhum cliente atende aos critérios especificados!\n");
 
   fclose(arquivoConsultas);
