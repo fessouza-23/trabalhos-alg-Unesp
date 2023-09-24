@@ -99,7 +99,7 @@ void consultarCliente() {
     }
 
     while (fread(&c, sizeof(Cliente), 1, file) == 1) {
-        printf("%d %s %d %s %s\n", c.codigo, c.nome, c.idade, c.endereco, c.fone);
+        printf("Codigo: %2d | Nome: %2s | Idade: %2d | Endereco: %2s | Telefone: %2s\n", c.codigo, c.nome, c.idade, c.endereco, c.fone);
     }
 
     fclose(file);
@@ -175,7 +175,6 @@ void marcarConsulta() {
     system("cls");
 
     FILE *file;
-
     Consulta consulta;
     int cod_gen = 0;
     
@@ -184,7 +183,7 @@ void marcarConsulta() {
         consulta.codigo = 0;
     }
     else{
-        while (fread(&consulta, sizeof(Cliente), 1, file) == 1) {
+        while (fread(&consulta, sizeof(Consulta), 1, file) == 1) {
             if(consulta.codigo == cod_gen)
                 cod_gen++;
             if(consulta.codigo != cod_gen)
@@ -195,7 +194,6 @@ void marcarConsulta() {
     file = abrirArquivo("consultas.dat", "ab");
 
     consulta.existe = 1;
-    while (getchar() != '\n');
 
     printf("Digite o nome do paciente que esta agendando a consulta: ");
     fgets(consulta.nomeDoCliente, sizeof(consulta.nomeDoCliente), stdin);
@@ -234,7 +232,7 @@ void listarConsultas() {
 
     while (fread(&consulta, sizeof(Consulta), 1, file) == 1) {
         if (consulta.existe)
-            printf("Codigo: %2d | Nome: %15s | Data: %2d/%d/%d | Horario: %2d:%d\n", consulta.codigo, consulta.nomeDoCliente, consulta.dia, consulta.mes, consulta.ano, consulta.hora, consulta.minuto);
+            printf("Codigo: %2d | Nome: %2s | Data: %2d/%d/%d | Horario: %2d:%d\n", consulta.codigo, consulta.nomeDoCliente, consulta.dia, consulta.mes, consulta.ano, consulta.hora, consulta.minuto);
     }
 
     fclose(file);
