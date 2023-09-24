@@ -35,6 +35,21 @@ void sobre() {
          "Gabriel Rasi e Guilherme S.\n"
          "Disciplina de Algoritmos II do curso de BSI\n");
   printf("Criado em 2023\n\n");
+  printf("Versao: 1.0\n");
+  printf("Descricao: Este programa eh um sistema de gerenciamento de clinica que \n"
+  "permite cadastrar clientes, marcar consultas e realizar outras operacoes relacionadas.\n");
+  printf("Funcionalidades: \n");
+  printf("- Cadastrar cliente\n");
+  printf("- Listar clientes\n");
+  printf("- Atualizar cliente\n");
+  printf("- Marcar consulta\n");
+  printf("- Listar consultas\n");
+  printf("- Desmarcar consulta\n");
+  printf("- Listar consultas por codigo de cliente\n");
+  printf("- Listar consultas que ocorreram ha mais de 6 meses de clientes com mais de 50 anos\n");
+  printf("- Sobre o programa\n");
+  printf("- Sair\n");
+  printf("\n");
   system("pause");
 }
 
@@ -91,17 +106,17 @@ void consultarCliente() {
 
   file = abrirArquivo("clientes.dat", "rb");
 
-  if (file == NULL) {
-    printf("Erro ao abrir o arquivo.\n");
-    return;
-  }
+  if(file != NULL) {
+    printf("==================================== LISTA DE CLIENTES "
+           "======================================\n");
+    printf("| %-8s | %-25s | %-5s | %-25s | %-15s |\n", "Codigo", "Nome", "Idade", "Endereco", "Telefone");
+    printf("----------------------------------------------------------------------------------------------\n");
 
-  while (fread(&c, sizeof(Cliente), 1, file) == 1) {
-    printf("Codigo: %d | Nome: %2s | Idade: %2d | Endereco: %2s | Telefone: "
-           "%2s\n",
-           c.codigo, c.nome, c.idade, c.endereco, c.fone);
+    while (fread(&c, sizeof(Cliente), 1, file) == 1) {
+      printf("| %-8d | %-25s | %-5d | %-25s | %-15s |\n",
+             c.codigo, c.nome, c.idade, c.endereco, c.fone);
+    }
   }
-
   fclose(file);
   getch();
 }
@@ -192,16 +207,16 @@ void marcarConsulta() {
 
   fflush(stdin);
 
-  printf("Digite o nome do paciente que esta agendando a consulta: ");
+  printf("Nome do paciente para consulta: ");
   fgets(consulta.nomeDoCliente, sizeof(consulta.nomeDoCliente), stdin);
   consulta.nomeDoCliente[strlen(consulta.nomeDoCliente) - 1] = '\0';
 
-  printf("Digite a data da consulta (DIA/MES/ANO): \n");
+  printf("Data da consulta (DIA/MES/ANO): ");
   scanf("%d/%d/%d", &consulta.dia, &consulta.mes, &consulta.ano);
 
   while (getchar() != '\n');
 
-  printf("Digite o horario da consulta (HORA:MINUTO): \n");
+  printf("Horario da consulta (HORA:MINUTO): ");
   scanf("%d:%d", &consulta.hora, &consulta.minuto);
 
   while (getchar() != '\n');
@@ -209,6 +224,7 @@ void marcarConsulta() {
   fwrite(&consulta, sizeof(Consulta), 1, file);
   fclose(file);
 
+  printf("\n");
   system("pause");
 }
 
@@ -227,11 +243,17 @@ void listarConsultas() {
     return;
   }
 
+  printf("================================= LISTA DE CONSULTAS "
+         "==================================\n");
+  printf("| %-8s | %-25s | %-10s | %-3s |\n", "Codigo", "Nome", "Data", "Horario");
+  printf("---------------------------------------------------------------\n");
+
   while (fread(&consulta, sizeof(Consulta), 1, file) == 1) {
     if (consulta.existe) {
-      printf("Codigo: %2d | Nome: %2s | Data: %2d/%d/%d | Horario: %2d:%d\n",
-             consulta.codigo, consulta.nomeDoCliente, consulta.dia,
-             consulta.mes, consulta.ano, consulta.hora, consulta.minuto);
+      printf("| %-8d | %-25s | %02d/%02d/%04d |  %02d:%02d  |\n",
+             consulta.codigo, consulta.nomeDoCliente,
+             consulta.dia, consulta.mes, consulta.ano,
+             consulta.hora, consulta.minuto);
       consultasEncontradas = 1; // Consultas foram encontradas
     }
   }
@@ -480,7 +502,7 @@ void menu() {
 
       case '0':
         system("cls");
-        printf("\nSaindo do programa...\n");
+        printf("\nSaindo do programa...\n\n");
         system("pause");
         break;
 
@@ -489,5 +511,4 @@ void menu() {
         break;
     }
   } while (op != '0');
-  printf("\e[?25h"); // Mostra o cursor novamente antes de sair
 }
