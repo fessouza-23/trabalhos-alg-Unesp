@@ -6,6 +6,7 @@
 #include <time.h>
 #include "funcs.h"
 
+//Checa se houve erros na abertura do arquivo
 FILE *abrirArquivo(const char nome_arquivo[20], const char op[5]) {
   FILE *file;
 
@@ -17,6 +18,7 @@ FILE *abrirArquivo(const char nome_arquivo[20], const char op[5]) {
   return file;
 }
 
+//Utilizada para confirmar uma acao
 int confirma() {
   char resp;
 
@@ -27,6 +29,7 @@ int confirma() {
   return (resp == 'S') ? 1 : 0;
 }
 
+//Menu sobre
 void sobre() {
   system("cls");
   printf("================================  SOBRE O PROGRAMA  "
@@ -53,12 +56,19 @@ void sobre() {
   system("pause");
 }
 
+//Escreve as informacoes de um cliente e as escreve num arquivo clientes.dat
 void cadastrarCliente() {
   system("cls");
 
   FILE *file;
   Cliente c;
   int cod_gen = 0;
+
+  printf("Deseja cadastrar um novo cliente (S\\N)?\n");
+  confirma();
+
+  system("cls");
+  printf("\e[?25h");
 
   if ((file = fopen("clientes.dat", "r+b")) == NULL) {
     file = fopen("clientes.dat", "wb");
@@ -71,6 +81,7 @@ void cadastrarCliente() {
         c.codigo = cod_gen;
     }
   }
+
   printf("CADASTRO DE NOVO CLIENTE\n");
 
   fflush(stdin);
@@ -78,6 +89,10 @@ void cadastrarCliente() {
   printf("Nome: ");
   fgets(c.nome, sizeof(c.nome), stdin);
   c.nome[strlen(c.nome) - 1] = '\0';
+
+  for (int i = 0; c.nome[i]; i++) {
+    c.nome[i] = toupper(c.nome[i]);
+  }
 
   printf("Idade: ");
   scanf("%d", &c.idade);
@@ -88,6 +103,10 @@ void cadastrarCliente() {
   fgets(c.endereco, sizeof(c.endereco), stdin);
   c.endereco[strlen(c.endereco) - 1] = '\0';
 
+  for (int i = 0; c.endereco[i]; i++) {
+    c.endereco[i] = toupper(c.endereco[i]);
+  }
+
   printf("Telefone: ");
   fgets(c.fone, sizeof(c.fone), stdin);
   c.fone[strlen(c.fone) - 1] = '\0';
@@ -97,7 +116,7 @@ void cadastrarCliente() {
   fclose(file);
 }
 
-// Esta função não está dentro das necessárias, serve apenas para testar
+//Lista todos os clientes armazenados no arquivo clientes.dat
 void listarClientes() {
   system("cls");
 
@@ -121,6 +140,8 @@ void listarClientes() {
   getch();
 }
 
+//Altera as informacoes de um cliente a partir de seu codigo, reescrevendo
+//no arquivo clientes.dat
 void atualizarCliente() {
   system("cls");
 
@@ -128,6 +149,12 @@ void atualizarCliente() {
   int codigo_ref; // Código de referência = código digitado para procurar o cliente
   Cliente c;
   int flag = 0;
+
+  printf("Deseja atualizar um cliente (S\\N)?\n");
+  confirma();
+
+  system("cls");
+  printf("\e[?25h");
 
   printf("Codigo do cliente: ");
   scanf("%d", &codigo_ref);
@@ -153,16 +180,25 @@ void atualizarCliente() {
         printf("Novo Nome: ");
         gets(c.nome);
 
+        for (int i = 0; c.nome[i]; i++) {
+          c.nome[i] = toupper(c.nome[i]);
+        }
+
         printf("Nova Idade: ");
         scanf("%d", &c.idade);
 
         while (getchar() != '\n');
 
         printf("Novo Endereco: ");
-        gets(c.endereco);
+        gets(c.endereco); 
+
+        for (int i = 0; c.endereco[i]; i++) {
+          c.endereco[i] = toupper(c.endereco[i]);
+        }
 
         printf("Novo Telefone: ");
         gets(c.fone);
+
 
         fseek(file, -sizeof(Cliente), SEEK_CUR);
         fwrite(&c, sizeof(Cliente), 1, file);
@@ -182,10 +218,32 @@ void atualizarCliente() {
     printf("\nCliente atualizado com sucesso!\n");
   }
   printf("\n");
+
+  while (getchar() != '\n');
+
   system("pause");
 }
 
-// Função para verificar se o nome do cliente existe no arquivo clientes.dat
+//Verifica se o codigo do cliente existe no arquivo clientes.dat
+int codigoClienteExiste(int codigo) {
+  FILE *file = fopen("clientes.dat", "rb");
+  if (file == NULL) {
+    return 0; // Se o arquivo não puder ser aberto, consideramos que o nome não existe
+  }
+
+  Cliente cliente;
+  while (fread(&cliente, sizeof(Cliente), 1, file) == 1) {
+    if (cliente.codigo == codigo) { // Codigo encontrado no arquivo
+      fclose(file);
+      return 1;
+    }
+  }
+
+  fclose(file);
+  return 0; // Codigo não encontrado no arquivo
+}
+
+//Verifica se o nome do cliente existe no arquivo clientes.dat
 int nomeClienteExiste(const char *nome) {
   FILE *file = fopen("clientes.dat", "rb");
   if (file == NULL) {
@@ -204,12 +262,20 @@ int nomeClienteExiste(const char *nome) {
   return 0; // Nome não encontrado no arquivo
 }
 
+//Marca uma consulta de um cliente ja existente a partir de seu codigo
+//utilizando a funcao codigoClienteExiste()
 void marcarConsulta() {
   system("cls");
 
   FILE *file;
   Consulta consulta;
   int cod_gen = 0;
+
+  printf("Deseja marcar uma consulta (S\\N)?\n");
+  confirma();
+
+  system("cls");
+  printf("\e[?25h");
 
   if ((file = fopen("consultas.dat", "r+b")) == NULL) {
     file = fopen("consultas.dat", "wb");
@@ -226,9 +292,27 @@ void marcarConsulta() {
 
   fflush(stdin);
 
+  printf("Codigo do paciente para consulta: ");
+  scanf("%d", &consulta.codigoDoCliente);
+
+  //Verifique se o codigo do cliente existe no arquivo
+  if (!codigoClienteExiste(consulta.codigoDoCliente)) {
+    printf("O codigo do cliente nao foi encontrado no arquivo clientes.dat.\n");
+    fclose(file);
+    printf("\n");
+    system("pause");
+    return;
+  }
+
+  /*while (getchar() != '\n');
+  
   printf("Nome do paciente para consulta: ");
   fgets(consulta.nomeDoCliente, sizeof(consulta.nomeDoCliente), stdin);
   consulta.nomeDoCliente[strlen(consulta.nomeDoCliente) - 1] = '\0';
+
+  for (int i = 0; consulta.nomeDoCliente[i]; i++) {
+    consulta.nomeDoCliente[i] = toupper(consulta.nomeDoCliente[i]);
+  }
 
   // Verifique se o nome do cliente existe no arquivo
   if (!nomeClienteExiste(consulta.nomeDoCliente)) {
@@ -237,7 +321,7 @@ void marcarConsulta() {
     printf("\n");
     system("pause");
     return;
-  }
+  }*/
 
   // Validação da data
   do {
@@ -268,7 +352,7 @@ void marcarConsulta() {
   system("pause");
 }
 
-// Esta função não está dentro das necessárias, serve apenas para testar
+//Lista todas as consultas que estao no arquivo consultas.dat
 void listarConsultas() {
   system("cls");
 
@@ -307,12 +391,20 @@ void listarConsultas() {
   system("pause");
 }
 
+//Desmarca uma consulta a partir do seu codigo
+//Remove os dados apenas virtualmente por meio de uma flag
 void desmarcarConsulta() {
   system("cls");
 
   FILE *file;
   Consulta consulta;
   int numero, flag = 0;
+
+  printf("Deseja desmarcar uma consulta (S\\N)?\n");
+  confirma();
+
+  system("cls");
+  printf("\e[?25h");
 
   printf("Codigo da consulta que deseja desmarcar: ");
   scanf("%d", &numero);
@@ -351,9 +443,12 @@ void desmarcarConsulta() {
   fclose(file);
 
   printf("\n");
+  while (getchar() != '\n');
   system("pause");
 }
 
+//Remove fisicamente o arquivo consulta.dat
+//So eh chamado no fim do programa
 void desmarcarConsultaRemFis() {
   system("cls");
 
@@ -376,9 +471,9 @@ void desmarcarConsultaRemFis() {
   rename("NOME.BAK", "consultas.dat");
 
   printf("Remocao fisica realizada com sucesso\n");
-  getch();
 }
 
+//Lista todas as consultas de um cliente a partir de seu codigo
 void listarConsultasCodCliente() {
   system("cls");
 
@@ -388,8 +483,13 @@ void listarConsultasCodCliente() {
   int cod, cont = 0;
   char aux[50];
 
+  printf("Deseja listar as consultas do cliente (S\\N)?\n");
+  confirma();
+
   printf("Codigo do cliente: ");
   scanf("%d", &cod);
+
+  system("cls");
 
   file = abrirArquivo("clientes.dat", "rb");
 
@@ -427,9 +527,12 @@ void listarConsultasCodCliente() {
            "digitado ou marque uma nova consulta.\n");
 
   fclose(file);
-  getch();
+  system("pause");
+  while (getchar() != '\n');
 }
 
+//Lista todas as consultas que ocorreram ha mais de 6 meses, onde o
+//cliente tambem possui mais de 50 anos
 void consultasHa6Meses() {
   FILE *arquivoConsultas, *arquivoClientes;
   Consulta consulta;
@@ -438,9 +541,17 @@ void consultasHa6Meses() {
 
   system("cls");
 
+  printf("Deseja ver as consultas que ocorreram ha mais de 6 meses (S\\N)?");
+  confirma();
+
+  system("cls");
+  printf("\e[?25h");
+
   arquivoConsultas = abrirArquivo("consultas.dat", "rb");
   arquivoClientes = abrirArquivo("clientes.dat", "rb");
 
+  //Cria variaveis do tipo struct tm, presentes na <time.h>.
+  //Essa struct possui variaveis de data, tempo etc ja predefinidas
   time_t horaAtual = time(NULL);
   struct tm seisMesesAtras;
   struct tm dataDaConsulta;
@@ -456,7 +567,9 @@ void consultasHa6Meses() {
   printf("-----------------------------------------------\n");
 
   while (fread(&consulta, sizeof(Consulta), 1, arquivoConsultas) == 1) {
+    //Verifica se a consulta existe
     if (consulta.existe == 1) {
+      //variaveis do tipo tm recebem as variaveis da struct consulta
       dataDaConsulta.tm_year = consulta.ano - 1900;
       dataDaConsulta.tm_mon = consulta.mes - 1;
       dataDaConsulta.tm_mday = consulta.dia;
@@ -487,9 +600,11 @@ void consultasHa6Meses() {
 
   fclose(arquivoConsultas);
   fclose(arquivoClientes);
-  getch();
+
+  while (getchar() != '\n');
 }
 
+//Cria o contexto do menu inicial
 void menu() {
   char op;
   Cliente c;
@@ -556,8 +671,8 @@ void menu() {
         break;
 
       default:
-        printf("\nOpcao invalida! Tente novamente.\n");
         break;
     }
   } while (op != 27); // Continue até que a tecla ESC seja pressionada
+  desmarcarConsultaRemFis();
 }
