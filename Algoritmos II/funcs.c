@@ -59,7 +59,7 @@ void cadastrarCliente() {
   }
   printf("CADASTRO DE NOVO CLIENTE\n");
 
-  fflush(stdin); // limpa o buffer
+  fflush(stdin);
 
   printf("Nome: ");
   fgets(c.nome, sizeof(c.nome), stdin);
@@ -192,9 +192,9 @@ void marcarConsulta() {
   consulta.existe = 1;
   consulta.codigo = cod_gen; // Defina o código antes de coletar outros dados
 
-  fflush(stdin); // Limpa o buffer
+  fflush(stdin);
 
-  printf("Digite o nome do paciente que está agendando a consulta: ");
+  printf("Digite o nome do paciente que esta agendando a consulta: ");
   fgets(consulta.nomeDoCliente, sizeof(consulta.nomeDoCliente), stdin);
   consulta.nomeDoCliente[strlen(consulta.nomeDoCliente) - 1] = '\0';
 
@@ -203,7 +203,7 @@ void marcarConsulta() {
 
   while (getchar() != '\n');
 
-  printf("Digite o horário da consulta (HORA:MINUTO): \n");
+  printf("Digite o horario da consulta (HORA:MINUTO): \n");
   scanf("%d:%d", &consulta.hora, &consulta.minuto);
 
   while (getchar() != '\n');
@@ -213,7 +213,6 @@ void marcarConsulta() {
 
   system("pause");
 }
-
 
 // Esta função não está dentro das necessárias, serve apenas para testar
 void listarConsultas() {
@@ -342,7 +341,8 @@ void listarConsultasCodCliente() {
 
   while (fread(&consulta, sizeof(Consulta), 1, file) == 1) {
     if ((strcmp(aux, consulta.nomeDoCliente) == 0) && consulta.existe == 1) {
-      printf("Codigo da consulta: %2d | Nome: %2s | Data: %2d/%d/%d | Horario: %2d:%d\n",
+      printf("Codigo da consulta: %2d | Nome: %2s | Data: %2d/%d/%d | Horario: "
+             "%2d:%d\n",
              consulta.codigo, consulta.nomeDoCliente, consulta.dia,
              consulta.mes, consulta.ano, consulta.hora, consulta.minuto);
       cont++;
@@ -357,36 +357,58 @@ void listarConsultasCodCliente() {
   getch();
 }
 
-void consultasHa6Meses(){
-  FILE *file;
+void consultasHa6Meses() {
+  FILE *arquivoConsultas, *arquivoClientes;
   Consulta consulta;
-  int cont;
+  Cliente cliente;
+  int cont = 0;
 
   system("cls");
 
-  file = abrirArquivo("consultas.dat", "rb"); 
+  arquivoConsultas = abrirArquivo("consultas.dat", "rb");
+  arquivoClientes = abrirArquivo("clientes.dat", "rb");
 
-  time_t result = time(NULL);
-  if(result != (time_t)(-1))
-    printf("The current time is %s)\n", asctime(gmtime(&result)));
+  time_t horaAtual = time(NULL);
+  struct tm seisMesesAtras;
+  struct tm dataDaConsulta;
 
-  while (fread(&consulta, sizeof(Consulta), 1, file) == 1) {
+  // Subtrai 6 meses do tempo atual
+  seisMesesAtras = *gmtime(&horaAtual);
+  seisMesesAtras.tm_mon -= 6;
+
+  while (fread(&consulta, sizeof(Consulta), 1, arquivoConsultas) == 1) {
     if (consulta.existe == 1) {
-      printf("Codigo: %2d | Nome: %2s | Data: %2d/%d/%d | Horario: %2d:%d\n",
-             consulta.codigo, consulta.nomeDoCliente, consulta.dia,
-             consulta.mes, consulta.ano, consulta.hora, consulta.minuto);
-      cont++;
+      dataDaConsulta.tm_year = consulta.ano - 1900;
+      dataDaConsulta.tm_mon = consulta.mes - 1;
+      dataDaConsulta.tm_mday = consulta.dia;
+      dataDaConsulta.tm_hour = consulta.hora;
+      dataDaConsulta.tm_min = consulta.minuto;
+      dataDaConsulta.tm_sec = 0;
+
+      // Calcula a diferença em segundos entre as datas
+      double diferenca = difftime(horaAtual, mktime(&dataDaConsulta));
+
+      // Verifique se a consulta ocorreu há mais de 6 meses
+      if (diferenca > 15778800) {
+        // Abre o arquivo de clientes e procura o cliente pelo código
+        fseek(arquivoClientes, (consulta.codigo - 1) * sizeof(Cliente), SEEK_SET);
+        fread(&cliente, sizeof(Cliente), 1, arquivoClientes);
+
+        // Verifica a idade do cliente
+        if (cliente.idade > 50) {
+          printf("Nome do Cliente: %s | Telefone: %s\n", cliente.nome, cliente.fone);
+          cont++;
+        }
+      }
     }
   }
 
   if (cont == 0)
-    printf("\nNenhuma consulta marcada com esse cliente! Verifique o codigo "
-           "digitado ou marque uma nova consulta.\n");
+    printf("\nNenhum cliente atende aos criterios especificados!\n");
 
-  fclose(file);
+  fclose(arquivoConsultas);
+  fclose(arquivoClientes);
   getch();
-  
-  
 }
 
 void menu() {
@@ -407,7 +429,7 @@ void menu() {
     printf("5 - Listar consultas\n");
     printf("6 - Desmarcar consultas\n");
     printf("8 - Listar consulta por cliente\n");
-    printf("9 - Consultas há mais de 6 meses\n");
+    printf("9 - Consultas de clientes com mais de 50 anos que ocorreram ha mais de 6 meses\n");
     op = getch();
 
     switch (op) {

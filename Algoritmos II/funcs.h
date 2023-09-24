@@ -43,7 +43,9 @@ void listarConsultas();
 
 void desmarcarConsultaRemFis();
 
-void datasConsulta();
+void listarConsultasCodCliente();
+
+void consultaHaMaisDe6Meses();
 
 void menu();
 
