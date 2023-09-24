@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "funcs.h"
 
 FILE *abrirArquivo(const char nome_arquivo[20], const char op[5]) {
@@ -97,7 +98,7 @@ void consultarCliente() {
   }
 
   while (fread(&c, sizeof(Cliente), 1, file) == 1) {
-    printf("Codigo: %2d | Nome: %2s | Idade: %2d | Endereco: %2s | Telefone: "
+    printf("Codigo: %d | Nome: %2s | Idade: %2d | Endereco: %2s | Telefone: "
            "%2s\n",
            c.codigo, c.nome, c.idade, c.endereco, c.fone);
   }
@@ -180,23 +181,20 @@ void marcarConsulta() {
 
   if ((file = fopen("consultas.dat", "r+b")) == NULL) {
     file = fopen("consultas.dat", "wb");
-    consulta.codigo = 0;
   } else {
     while (fread(&consulta, sizeof(Consulta), 1, file) == 1) {
-      if (consulta.codigo == cod_gen)
-        cod_gen++;
-      if (consulta.codigo != cod_gen)
-        consulta.codigo = cod_gen;
+      if (consulta.codigo >= cod_gen)
+        cod_gen = consulta.codigo + 1;
     }
+    fseek(file, 0, SEEK_END); // Vá para o final do arquivo
   }
 
-  file = abrirArquivo("consultas.dat", "ab");
-
   consulta.existe = 1;
+  consulta.codigo = cod_gen; // Defina o código antes de coletar outros dados
 
-  fflush(stdin); // limpa o buffer
+  fflush(stdin); // Limpa o buffer
 
-  printf("Digite o nome do paciente que esta agendando a consulta: ");
+  printf("Digite o nome do paciente que está agendando a consulta: ");
   fgets(consulta.nomeDoCliente, sizeof(consulta.nomeDoCliente), stdin);
   consulta.nomeDoCliente[strlen(consulta.nomeDoCliente) - 1] = '\0';
 
@@ -205,7 +203,7 @@ void marcarConsulta() {
 
   while (getchar() != '\n');
 
-  printf("Digite o horario da consulta (HORA:MINUTO): \n");
+  printf("Digite o horário da consulta (HORA:MINUTO): \n");
   scanf("%d:%d", &consulta.hora, &consulta.minuto);
 
   while (getchar() != '\n');
@@ -213,9 +211,9 @@ void marcarConsulta() {
   fwrite(&consulta, sizeof(Consulta), 1, file);
   fclose(file);
 
-  printf("\nPressione qualquer tecla para voltar ao menu.\n");
-  getch();
+  system("pause");
 }
+
 
 // Esta função não está dentro das necessárias, serve apenas para testar
 void listarConsultas() {
@@ -314,7 +312,7 @@ void desmarcarConsultaRemFis() {
   getch();
 }
 
-void datasConsulta() {
+void listarConsultasCodCliente() {
   system("cls");
 
   FILE *file;
@@ -344,6 +342,36 @@ void datasConsulta() {
 
   while (fread(&consulta, sizeof(Consulta), 1, file) == 1) {
     if ((strcmp(aux, consulta.nomeDoCliente) == 0) && consulta.existe == 1) {
+      printf("Codigo da consulta: %2d | Nome: %2s | Data: %2d/%d/%d | Horario: %2d:%d\n",
+             consulta.codigo, consulta.nomeDoCliente, consulta.dia,
+             consulta.mes, consulta.ano, consulta.hora, consulta.minuto);
+      cont++;
+    }
+  }
+
+  if (cont == 0)
+    printf("\nNenhuma consulta marcada com esse cliente! Verifique o codigo "
+           "digitado ou marque uma nova consulta.\n");
+
+  fclose(file);
+  getch();
+}
+
+void consultasHa6Meses(){
+  FILE *file;
+  Consulta consulta;
+  int cont;
+
+  system("cls");
+
+  file = abrirArquivo("consultas.dat", "rb"); 
+
+  time_t result = time(NULL);
+  if(result != (time_t)(-1))
+    printf("The current time is %s)\n", asctime(gmtime(&result)));
+
+  while (fread(&consulta, sizeof(Consulta), 1, file) == 1) {
+    if (consulta.existe == 1) {
       printf("Codigo: %2d | Nome: %2s | Data: %2d/%d/%d | Horario: %2d:%d\n",
              consulta.codigo, consulta.nomeDoCliente, consulta.dia,
              consulta.mes, consulta.ano, consulta.hora, consulta.minuto);
@@ -357,6 +385,8 @@ void datasConsulta() {
 
   fclose(file);
   getch();
+  
+  
 }
 
 void menu() {
@@ -377,6 +407,7 @@ void menu() {
     printf("5 - Listar consultas\n");
     printf("6 - Desmarcar consultas\n");
     printf("8 - Listar consulta por cliente\n");
+    printf("9 - Consultas há mais de 6 meses\n");
     op = getch();
 
     switch (op) {
@@ -405,7 +436,11 @@ void menu() {
       break;
 
     case '8':
-      datasConsulta();
+      listarConsultasCodCliente();
+      break;
+
+    case '9':
+      consultasHa6Meses();
       break;
 
     case f1:
