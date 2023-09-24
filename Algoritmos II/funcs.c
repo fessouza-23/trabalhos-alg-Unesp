@@ -98,7 +98,7 @@ void cadastrarCliente() {
 }
 
 // Esta função não está dentro das necessárias, serve apenas para testar
-void consultarCliente() {
+void listarClientes() {
   system("cls");
 
   FILE *file;
@@ -129,7 +129,7 @@ void atualizarCliente() {
   Cliente c;
   int flag = 0;
 
-  printf("Digite o codigo do cliente: ");
+  printf("Codigo do cliente: ");
   scanf("%d", &codigo_ref);
 
   file = abrirArquivo("clientes.dat", "r+b");
@@ -185,6 +185,25 @@ void atualizarCliente() {
   system("pause");
 }
 
+// Função para verificar se o nome do cliente existe no arquivo clientes.dat
+int nomeClienteExiste(const char *nome) {
+  FILE *file = fopen("clientes.dat", "rb");
+  if (file == NULL) {
+    return 0; // Se o arquivo não puder ser aberto, consideramos que o nome não existe
+  }
+
+  Cliente cliente;
+  while (fread(&cliente, sizeof(Cliente), 1, file) == 1) {
+    if (strcmp(cliente.nome, nome) == 0) {
+      fclose(file);
+      return 1; // Nome encontrado no arquivo
+    }
+  }
+
+  fclose(file);
+  return 0; // Nome não encontrado no arquivo
+}
+
 void marcarConsulta() {
   system("cls");
 
@@ -211,13 +230,34 @@ void marcarConsulta() {
   fgets(consulta.nomeDoCliente, sizeof(consulta.nomeDoCliente), stdin);
   consulta.nomeDoCliente[strlen(consulta.nomeDoCliente) - 1] = '\0';
 
-  printf("Data da consulta (DIA/MES/ANO): ");
-  scanf("%d/%d/%d", &consulta.dia, &consulta.mes, &consulta.ano);
+  // Verifique se o nome do cliente existe no arquivo
+  if (!nomeClienteExiste(consulta.nomeDoCliente)) {
+    printf("O nome do cliente nao foi encontrado no arquivo clientes.dat.\n");
+    fclose(file);
+    printf("\n");
+    system("pause");
+    return;
+  }
 
-  while (getchar() != '\n');
+  // Validação da data
+  do {
+    printf("Data da consulta (DIA/MES/ANO): ");
+    if (scanf("%d/%d/%d", &consulta.dia, &consulta.mes, &consulta.ano) != 3) {
+      printf("Formato de data invalido. Use o formato DIA/MES/ANO.\n");
+      while (getchar() != '\n');
+    }
+  } while (consulta.dia < 1 || consulta.mes < 1 || consulta.mes > 12 || consulta.ano < 1900 ||
+           (consulta.dia > 31 || (consulta.mes == 2 && consulta.dia > 29) ||
+            ((consulta.mes == 4 || consulta.mes == 6 || consulta.mes == 9 || consulta.mes == 11) && consulta.dia > 30)));
 
-  printf("Horario da consulta (HORA:MINUTO): ");
-  scanf("%d:%d", &consulta.hora, &consulta.minuto);
+  // Validação do horário
+  do {
+    printf("Horario da consulta (HORA:MINUTO): ");
+    if (scanf("%d:%d", &consulta.hora, &consulta.minuto) != 2) {
+      printf("Formato de horário invalido. Use o formato HORA:MINUTO.\n");
+      while (getchar() != '\n');
+    }
+  } while (consulta.hora < 0 || consulta.hora > 23 || consulta.minuto < 0 || consulta.minuto > 59);
 
   while (getchar() != '\n');
 
@@ -274,7 +314,7 @@ void desmarcarConsulta() {
   Consulta consulta;
   int numero, flag = 0;
 
-  printf("Digite o codigo da consulta que deseja desmarcar: ");
+  printf("Codigo da consulta que deseja desmarcar: ");
   scanf("%d", &numero);
 
   file = abrirArquivo("consultas.dat", "r+b");
@@ -348,7 +388,7 @@ void listarConsultasCodCliente() {
   int cod, cont = 0;
   char aux[50];
 
-  printf("Digite o codigo do cliente: ");
+  printf("Codigo do cliente: ");
   scanf("%d", &cod);
 
   file = abrirArquivo("clientes.dat", "rb");
@@ -446,21 +486,19 @@ void menu() {
 
   do {
     system("cls");
-    printf("\e[?25l"); // Oculta o cursor piscante
-    printf("\n================================== MENU "
-           "=====================================\n");
-    printf(" 1 - Cadastrar Cliente\n");
-    printf(" 2 - Listar Clientes\n");
-    printf(" 3 - Atualizar Cliente\n");
-    printf(" 4 - Marcar Consulta\n");
-    printf(" 5 - Listar Consultas\n");
-    printf(" 6 - Desmarcar Consulta\n");
-    printf(" 7 - Listar Consultas por Cliente\n");
-    printf(" 8 - Consultas de Clientes com mais de 50 anos\n");
-    printf(" 9 - Sobre o Programa\n");
-    printf(" 0 - Sair\n");
-    printf("\nEscolha uma opcao: ");
-
+    printf("\e[?25l");
+    printf("================================  MENU  "
+           "=======================================\n");
+    printf("|ESC - Sair | F1 - Sobre o Programa|\n");
+    printf("1 - Cadastrar cliente\n");
+    printf("2 - Listar clientes\n");
+    printf("3 - Atualizar cliente\n");
+    printf("4 - Marcar consulta\n");
+    printf("5 - Listar consultas\n");
+    printf("6 - Desmarcar consultas\n");
+    printf("7 - Mapa de horarios para um determinado dia\n");
+    printf("8 - Listar consulta por codigo de cliente\n");
+    printf("9 - Consultas de clientes com mais de 50 anos que ocorreram ha mais de 6 meses\n");
     op = getch();
 
     switch (op) {
@@ -469,7 +507,7 @@ void menu() {
         break;
 
       case '2':
-        consultarCliente();
+        listarClientes();
         break;
 
       case '3':
@@ -488,27 +526,27 @@ void menu() {
         desmarcarConsulta();
         break;
 
-      case '7':
+      case '8':
         listarConsultasCodCliente();
         break;
 
-      case '8':
+      case '9':
         consultasHa6Meses();
         break;
 
-      case '9':
-        sobre();
-        break;
-
-      case '0':
+      case 27: // Tecla ESC para sair
         system("cls");
         printf("\nSaindo do programa...\n\n");
         system("pause");
+        break;
+
+      case 0: // Tecla F1 para Sobre o Programa
+        sobre();
         break;
 
       default:
         printf("\nOpcao invalida! Tente novamente.\n");
         break;
     }
-  } while (op != '0');
+  } while (op != 27); // Continue até que a tecla ESC seja pressionada
 }
