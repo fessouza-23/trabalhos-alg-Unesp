@@ -271,8 +271,8 @@ void marcarConsulta() {
   Consulta consulta;
   int cod_gen = 0;
 
-  printf("Deseja marcar uma consulta (S\\N)?\n");
-  confirma();
+  /*printf("Deseja marcar uma consulta (S\\N)?\n");
+  confirma();*/
 
   system("cls");
   printf("\e[?25h");
@@ -541,17 +541,9 @@ void consultasHa6Meses() {
 
   system("cls");
 
-  printf("Deseja ver as consultas que ocorreram ha mais de 6 meses (S\\N)?");
-  confirma();
-
-  system("cls");
-  printf("\e[?25h");
-
   arquivoConsultas = abrirArquivo("consultas.dat", "rb");
   arquivoClientes = abrirArquivo("clientes.dat", "rb");
 
-  //Cria variaveis do tipo struct tm, presentes na <time.h>.
-  //Essa struct possui variaveis de data, tempo etc ja predefinidas
   time_t horaAtual = time(NULL);
   struct tm seisMesesAtras;
   struct tm dataDaConsulta;
@@ -567,9 +559,7 @@ void consultasHa6Meses() {
   printf("-----------------------------------------------\n");
 
   while (fread(&consulta, sizeof(Consulta), 1, arquivoConsultas) == 1) {
-    //Verifica se a consulta existe
     if (consulta.existe == 1) {
-      //variaveis do tipo tm recebem as variaveis da struct consulta
       dataDaConsulta.tm_year = consulta.ano - 1900;
       dataDaConsulta.tm_mon = consulta.mes - 1;
       dataDaConsulta.tm_mday = consulta.dia;
@@ -600,8 +590,7 @@ void consultasHa6Meses() {
 
   fclose(arquivoConsultas);
   fclose(arquivoClientes);
-
-  while (getchar() != '\n');
+  getch();
 }
 
 //Cria o contexto do menu inicial
