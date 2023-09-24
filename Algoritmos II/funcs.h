@@ -31,7 +31,7 @@ void sobre();
 
 void cadastrarCliente();
 
-void consultarCliente();
+void listarClientes();
 
 void atualizarCliente();
 
@@ -45,7 +45,9 @@ void desmarcarConsultaRemFis();
 
 void listarConsultasCodCliente();
 
-void consultaHaMaisDe6Meses();
+void consultasHa6Meses();
+
+int nomeClienteExiste(const char *nome);
 
 void menu();
 
