@@ -10,7 +10,7 @@ FILE *abrirArquivo(const char nome_arquivo[20], const char op[5]) {
     
     if ((file = fopen(nome_arquivo, op)) == NULL) {
         printf("Erro ao abrir o arquivo.\n\n");
-        exit(1);
+        system("pause");
     }
 
     return file;
@@ -177,13 +177,24 @@ void marcarConsulta() {
     FILE *file;
 
     Consulta consulta;
+    int cod_gen = 0;
+    
+    if ((file = fopen("consultas.dat", "r+b")) == NULL) {
+        file = fopen("consultas.dat", "wb");
+        consulta.codigo = 0;
+    }
+    else{
+        while (fread(&consulta, sizeof(Cliente), 1, file) == 1) {
+            if(consulta.codigo == cod_gen)
+                cod_gen++;
+            if(consulta.codigo != cod_gen)
+                consulta.codigo = cod_gen;
+        }
+    }
 
     file = abrirArquivo("consultas.dat", "ab");
 
     consulta.existe = 1;
-    printf("Digite o codigo da consulta: ");
-    scanf("%d", &consulta.codigo);
-
     while (getchar() != '\n');
 
     printf("Digite o nome do paciente que esta agendando a consulta: ");
@@ -388,7 +399,6 @@ void menu() {
 
             case '6':
                 desmarcarConsulta();
-                desmarcarConsultaRemFis();
                 break;
 
             case '8':
@@ -401,4 +411,5 @@ void menu() {
         }
 
     } while (op != esc);
+    desmarcarConsultaRemFis();
 }
