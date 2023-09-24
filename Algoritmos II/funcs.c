@@ -407,12 +407,17 @@ void listarConsultasCodCliente() {
     return;
   }
 
+  printf("================================= LISTA DE CONSULTAS "
+         "==================================\n");
+  printf("| %-8s | %-25s | %-10s | %-3s |\n", "Codigo", "Nome", "Data", "Horario");
+  printf("---------------------------------------------------------------\n");
+
   while (fread(&consulta, sizeof(Consulta), 1, file) == 1) {
     if ((strcmp(aux, consulta.nomeDoCliente) == 0) && consulta.existe == 1) {
-      printf("Codigo da consulta: %2d | Nome: %2s | Data: %2d/%d/%d | Horario: "
-             "%2d:%d\n",
-             consulta.codigo, consulta.nomeDoCliente, consulta.dia,
-             consulta.mes, consulta.ano, consulta.hora, consulta.minuto);
+      printf("| %-8d | %-25s | %02d/%02d/%04d |  %02d:%02d  |\n",
+             consulta.codigo, consulta.nomeDoCliente,
+             consulta.dia, consulta.mes, consulta.ano,
+             consulta.hora, consulta.minuto);
       cont++;
     }
   }
@@ -444,6 +449,12 @@ void consultasHa6Meses() {
   seisMesesAtras = *gmtime(&horaAtual);
   seisMesesAtras.tm_mon -= 6;
 
+  printf("Consultas que ocorreram ha mais de 6 meses de cliente com mais de 50 anos:\n\n");
+  printf("================================= LISTA DE CONSULTAS "
+         "==================================\n");
+  printf("| %-25s | %-15s |\n", "Nome do Cliente", "Telefone");
+  printf("-----------------------------------------------\n");
+
   while (fread(&consulta, sizeof(Consulta), 1, arquivoConsultas) == 1) {
     if (consulta.existe == 1) {
       dataDaConsulta.tm_year = consulta.ano - 1900;
@@ -464,7 +475,7 @@ void consultasHa6Meses() {
 
         // Verifica a idade do cliente
         if (cliente.idade > 50) {
-          printf("Nome do Cliente: %s | Telefone: %s\n", cliente.nome, cliente.fone);
+          printf("| %-25s | %-15s |\n", consulta.nomeDoCliente, cliente.fone);
           cont++;
         }
       }
@@ -472,7 +483,7 @@ void consultasHa6Meses() {
   }
 
   if (cont == 0)
-    printf("\nNenhum cliente atende aos criterios especificados!\n");
+    printf("\nNenhum cliente atende aos critérios especificados!\n");
 
   fclose(arquivoConsultas);
   fclose(arquivoClientes);
