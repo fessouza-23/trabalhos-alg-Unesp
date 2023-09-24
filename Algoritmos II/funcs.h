@@ -16,6 +16,7 @@ typedef struct {
   int codigo;
   int existe;
   char nomeDoCliente[50];
+  int codigoDoCliente;
   int dia;
   int mes;
   int ano;
@@ -48,6 +49,8 @@ void listarConsultasCodCliente();
 void consultasHa6Meses();
 
 int nomeClienteExiste(const char *nome);
+
+int codigoClienteExiste(int codigo);
 
 void menu();
 
