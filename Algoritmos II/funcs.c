@@ -34,9 +34,8 @@ void sobre() {
   printf("Programa desenvolvido por Eduardo R. Teixeira, Joao V. F. Souza, "
          "Gabriel Rasi e Guilherme S.\n"
          "Disciplina de Algoritmos II do curso de BSI\n");
-  printf("Criado em 2023\n");
-  printf("\nPressione qualquer tecla para voltar ao menu.\n");
-  getch();
+  printf("Criado em 2023\n\n");
+  system("pause");
 }
 
 void cadastrarCliente() {
@@ -161,15 +160,14 @@ void atualizarCliente() {
   }
 
   if (!flag) {
-    printf("Cliente nao encontrado!\n");
+    printf("\nCliente nao encontrado!\n");
   } else if (flag == 2) {
-    printf("Cliente nao alterado!\n");
+    printf("\nCliente nao alterado!\n");
   } else {
-    printf("Cliente atualizado com sucesso!\n");
+    printf("\nCliente atualizado com sucesso!\n");
   }
-
-  printf("\nPressione qualquer tecla para voltar ao menu.\n");
-  getch();
+  printf("\n");
+  system("pause");
 }
 
 void marcarConsulta() {
@@ -220,6 +218,7 @@ void listarConsultas() {
 
   FILE *file;
   Consulta consulta;
+  int consultasEncontradas = 0; // Variável para rastrear se consultas foram encontradas
 
   file = abrirArquivo("consultas.dat", "rb");
 
@@ -229,14 +228,21 @@ void listarConsultas() {
   }
 
   while (fread(&consulta, sizeof(Consulta), 1, file) == 1) {
-    if (consulta.existe)
+    if (consulta.existe) {
       printf("Codigo: %2d | Nome: %2s | Data: %2d/%d/%d | Horario: %2d:%d\n",
              consulta.codigo, consulta.nomeDoCliente, consulta.dia,
              consulta.mes, consulta.ano, consulta.hora, consulta.minuto);
+      consultasEncontradas = 1; // Consultas foram encontradas
+    }
   }
 
   fclose(file);
-  getch();
+
+  if (!consultasEncontradas) {
+    printf("Nenhuma consulta encontrada.\n");
+  }
+  printf("\n");
+  system("pause");
 }
 
 void desmarcarConsulta() {
@@ -282,8 +288,8 @@ void desmarcarConsulta() {
 
   fclose(file);
 
-  printf("\nPressione qualquer tecla para voltar ao menu.\n");
-  getch();
+  printf("\n");
+  system("pause");
 }
 
 void desmarcarConsultaRemFis() {
@@ -388,7 +394,7 @@ void consultasHa6Meses() {
       // Calcula a diferença em segundos entre as datas
       double diferenca = difftime(horaAtual, mktime(&dataDaConsulta));
 
-      // Verifique se a consulta ocorreu há mais de 6 meses
+      // Verifica se a consulta ocorreu há mais de 6 meses
       if (diferenca > 15778800) {
         // Abre o arquivo de clientes e procura o cliente pelo código
         fseek(arquivoClientes, (consulta.codigo - 1) * sizeof(Cliente), SEEK_SET);
@@ -418,58 +424,70 @@ void menu() {
 
   do {
     system("cls");
-    printf("\e[?25l");
-    printf("================================  MENU  "
-           "=======================================\n");
-    printf("|ESC - Sair | F1 - Sobre o Programa|\n");
-    printf("1 - Cadastrar cliente\n");
-    printf("2 - Listar clientes\n");
-    printf("3 - Atualizar cliente\n");
-    printf("4 - Marcar consulta\n");
-    printf("5 - Listar consultas\n");
-    printf("6 - Desmarcar consultas\n");
-    printf("8 - Listar consulta por cliente\n");
-    printf("9 - Consultas de clientes com mais de 50 anos que ocorreram ha mais de 6 meses\n");
+    printf("\e[?25l"); // Oculta o cursor piscante
+    printf("\n================================== MENU "
+           "=====================================\n");
+    printf(" 1 - Cadastrar Cliente\n");
+    printf(" 2 - Listar Clientes\n");
+    printf(" 3 - Atualizar Cliente\n");
+    printf(" 4 - Marcar Consulta\n");
+    printf(" 5 - Listar Consultas\n");
+    printf(" 6 - Desmarcar Consulta\n");
+    printf(" 7 - Listar Consultas por Cliente\n");
+    printf(" 8 - Consultas de Clientes com mais de 50 anos\n");
+    printf(" 9 - Sobre o Programa\n");
+    printf(" 0 - Sair\n");
+    printf("\nEscolha uma opcao: ");
+
     op = getch();
 
     switch (op) {
-    case '1':
-      cadastrarCliente();
-      break;
+      case '1':
+        cadastrarCliente();
+        break;
 
-    case '2':
-      consultarCliente();
-      break;
+      case '2':
+        consultarCliente();
+        break;
 
-    case '3':
-      atualizarCliente();
-      break;
+      case '3':
+        atualizarCliente();
+        break;
 
-    case '4':
-      marcarConsulta();
-      break;
+      case '4':
+        marcarConsulta();
+        break;
 
-    case '5':
-      listarConsultas();
-      break;
+      case '5':
+        listarConsultas();
+        break;
 
-    case '6':
-      desmarcarConsulta();
-      break;
+      case '6':
+        desmarcarConsulta();
+        break;
 
-    case '8':
-      listarConsultasCodCliente();
-      break;
+      case '7':
+        listarConsultasCodCliente();
+        break;
 
-    case '9':
-      consultasHa6Meses();
-      break;
+      case '8':
+        consultasHa6Meses();
+        break;
 
-    case f1:
-      sobre();
-      break;
+      case '9':
+        sobre();
+        break;
+
+      case '0':
+        system("cls");
+        printf("\nSaindo do programa...\n");
+        system("pause");
+        break;
+
+      default:
+        printf("\nOpcao invalida! Tente novamente.\n");
+        break;
     }
-
-  } while (op != esc);
-  desmarcarConsultaRemFis();
+  } while (op != '0');
+  printf("\e[?25h"); // Mostra o cursor novamente antes de sair
 }
