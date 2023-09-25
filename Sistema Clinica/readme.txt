@@ -25,5 +25,6 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 6. Após a instalação, basta executar o comando "make" no diretório do projeto (SEM ASPAS)
 
-executar na src para compilar informacoes do programa
+caso necessite:
+executar na src para compilar informacoes e o icone do programa
 windres my.rc -o coff -o my.res
