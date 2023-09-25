@@ -21,3 +21,7 @@ $(OBJ_DIR)/consulta.o: $(SRC_DIR)/consulta.c $(INCLUDE_DIR)/cliutils.h $(INCLUDE
 # Create the obj directory if it doesn't exist
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
+
+# Create the bin directory if it doesn't exist
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
