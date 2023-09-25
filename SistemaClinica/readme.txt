@@ -1,6 +1,6 @@
 COMO COMPILAR O PROGRAMA
 1 - RODAR "MAKE" NA RAIZ DO DIRETORIO
-3 - FIM
+2 - FIM
 
 Trabalho de Algoritmos II - Gerenciamento de Clinica
 a partir de manipulação de arquivos binarios
