@@ -16,7 +16,9 @@ void cadastrarCliente() {
   int cod_gen = 0;
 
   printf("Deseja cadastrar um novo cliente (S\\N)?\n");
-  confirma();
+  if (!confirma()) {
+    return;
+  }
 
   system("cls");
   printf("\e[?25h");
@@ -102,7 +104,9 @@ void atualizarCliente() {
   int flag = 0;
 
   printf("Deseja atualizar um cliente (S\\N)?\n");
-  confirma();
+  if (!confirma()) {
+    return;
+  }
 
   system("cls");
   printf("\e[?25h");

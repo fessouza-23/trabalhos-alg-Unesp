@@ -57,7 +57,9 @@ void marcarConsulta() {
   int cod_gen = 0;
 
   printf("Deseja marcar uma consulta (S\\N)?\n");
-  confirma();
+  if (!confirma()) {
+    return;
+  }
 
   system("cls");
   printf("\e[?25h");
@@ -187,7 +189,9 @@ void desmarcarConsulta() {
   int numero, flag = 0;
 
   printf("Deseja desmarcar uma consulta (S\\N)?\n");
-  confirma();
+  if (!confirma()) {
+    return;
+  }
 
   system("cls");
   printf("\e[?25h");
@@ -270,7 +274,9 @@ void listarConsultasCodCliente() {
   char aux[50];
 
   printf("Deseja listar as consultas do cliente (S\\N)?\n");
-  confirma();
+  if (!confirma()) {
+    return;
+  }
 
   printf("Codigo do cliente: ");
   scanf("%d", &cod);
