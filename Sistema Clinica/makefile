@@ -18,10 +18,8 @@ $(OBJ_DIR)/cliente.o: $(SRC_DIR)/cliente.c $(INCLUDE_DIR)/cliutils.h $(INCLUDE_D
 $(OBJ_DIR)/consulta.o: $(SRC_DIR)/consulta.c $(INCLUDE_DIR)/cliutils.h $(INCLUDE_DIR)/consulta.h | $(OBJ_DIR)
 	gcc -I $(INCLUDE_DIR) -c $< -o $@ -w
 
-# Create the obj directory if it doesn't exist
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
-# Create the bin directory if it doesn't exist
 $(BIN_DIR):
 	mkdir -p $(BIN_DIR)
