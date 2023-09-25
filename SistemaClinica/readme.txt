@@ -1,6 +1,5 @@
 COMO COMPILAR O PROGRAMA
 1 - RODAR "MAKE" NA RAIZ DO DIRETORIO
-2 - O EXECUTAVEL SERA GERADO NO DIRETORIO /bin
 3 - FIM
 
 Trabalho de Algoritmos II - Gerenciamento de Clinica
