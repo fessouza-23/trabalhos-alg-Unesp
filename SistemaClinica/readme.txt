@@ -2,6 +2,15 @@ COMO COMPILAR O PROGRAMA
 1 - RODAR "MAKE" NA RAIZ DO DIRETORIO
 2 - O EXECUTAVEL SERA GERADO NO DIRETORIO /bin
 3 - FIM
+
+Trabalho de Algoritmos II - Gerenciamento de Clinica
+a partir de manipulação de arquivos binarios
+realizado por:
+ - João Victor Fernandes Souza
+ - Eduardo Rodrigues Teixeira
+ - Gabriel Rasi
+ - Guilherme Silva
+
 --------------------------------------------------------------------------------------------------------------------------
 INSTALANDO "MAKE" POR MEIO DO GERENCIADOR DE PACOTES "CHOCOLATEY" PARA WINDOWS
 
