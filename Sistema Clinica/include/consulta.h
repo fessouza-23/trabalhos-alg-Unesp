@@ -14,6 +14,8 @@ void desmarcarConsultaRemFis();
 
 void listarConsultasCodCliente();
 
+Consulta funcConsultaRecente(const Cliente *cliente);
+
 void consultasHa6Meses();
 
 #endif

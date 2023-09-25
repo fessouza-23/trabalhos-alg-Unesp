@@ -317,18 +317,46 @@ void listarConsultasCodCliente() {
   while (getchar() != '\n');
 }
 
-//Lista todas as consultas que ocorreram ha mais de 6 meses, onde o
-//cliente tambem possui mais de 50 anos
-void consultasHa6Meses() {
-  FILE *arquivoConsultas, *arquivoClientes;
+/*
+ as duas funções abaixo possuem função de achar os clientes com mais de 50 anos
+ em que suas consultas foram realizadas há mais de 6 meses, a primeira faz
+ realiza a verificação da consulta mais atual do cliente, e a segunda verifica
+ se está já ocorreu há mais de 6 meses ou não
+*/
+Consulta funcConsultaRecente(const Cliente *cliente) {
+  FILE *arquivoConsultas;
   Consulta consulta;
-  Cliente cliente;
-  int cont = 0;
-
-  system("cls");
+  Consulta consultaMaisRecente;
+  consultaMaisRecente.ano = 0;
+  consultaMaisRecente.mes = 0;
+  consultaMaisRecente.dia = 0;
+  consultaMaisRecente.hora = 0;
+  consultaMaisRecente.minuto = 0;
 
   arquivoConsultas = abrirArquivo("consultas.dat", "rb");
+
+  while (fread(&consulta, sizeof(Consulta), 1, arquivoConsultas) == 1)
+  {
+    if (consulta.existe == 1 && strcmp(consulta.nomeDoCliente, cliente->nome) == 0)
+    {
+      consultaMaisRecente = consulta;
+    }
+  }
+
+  fclose(arquivoConsultas);
+  return consultaMaisRecente;
+}
+
+Consulta consultaMaisRecente;
+
+void consultasHa6Meses() {
+  FILE *arquivoClientes;
+  Cliente cliente;
+  int cont;
+
   arquivoClientes = abrirArquivo("clientes.dat", "rb");
+
+  system("cls");
 
   time_t horaAtual = time(NULL);
   struct tm seisMesesAtras;
@@ -344,37 +372,28 @@ void consultasHa6Meses() {
   printf("| %-25s | %-15s |\n", "Nome do Cliente", "Telefone");
   printf("-----------------------------------------------\n");
 
-  while (fread(&consulta, sizeof(Consulta), 1, arquivoConsultas) == 1) {
-    if (consulta.existe == 1) {
-      dataDaConsulta.tm_year = consulta.ano - 1900;
-      dataDaConsulta.tm_mon = consulta.mes - 1;
-      dataDaConsulta.tm_mday = consulta.dia;
-      dataDaConsulta.tm_hour = consulta.hora;
-      dataDaConsulta.tm_min = consulta.minuto;
+  while (fread(&cliente, sizeof(Cliente), 1, arquivoClientes))
+  {
+    if (cliente.idade > 50)
+    {
+      consultaMaisRecente = funcConsultaRecente(&cliente);
+      dataDaConsulta.tm_year = consultaMaisRecente.ano - 1900;
+      dataDaConsulta.tm_mon = consultaMaisRecente.mes - 1;
+      dataDaConsulta.tm_mday = consultaMaisRecente.dia;
+      dataDaConsulta.tm_hour = consultaMaisRecente.hora;
+      dataDaConsulta.tm_min = consultaMaisRecente.minuto;
       dataDaConsulta.tm_sec = 0;
 
-      // Calcula a diferença em segundos entre as datas
       double diferenca = difftime(horaAtual, mktime(&dataDaConsulta));
 
-      // Verifica se a consulta ocorreu há mais de 6 meses
-      if (diferenca > 15778800) {
-        // Abre o arquivo de clientes e procura o cliente pelo código
-        fseek(arquivoClientes, (consulta.codigo - 1) * sizeof(Cliente), SEEK_SET);
-        fread(&cliente, sizeof(Cliente), 1, arquivoClientes);
-
-        // Verifica a idade do cliente
-        if (cliente.idade > 50) {
-          printf("| %-25s | %-15s |\n", consulta.nomeDoCliente, cliente.fone);
-          cont++;
-        }
+      if (diferenca > 15778800)
+      {
+        printf("| %-25s | %-15s |\n", consultaMaisRecente.nomeDoCliente, cliente.fone);
+        cont++;
       }
     }
   }
 
-  if (cont < 0)
-    printf("\nNenhum cliente atende aos critérios especificados!\n");
-
-  fclose(arquivoConsultas);
   fclose(arquivoClientes);
   getch();
 }
