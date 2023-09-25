@@ -1,6 +1,6 @@
 COMO COMPILAR O PROGRAMA
-1 - RODAR "MAKE" NA RAIZ DO DIRETORIO
-2 - O EXECUTAVEL SERA GERADO NO DIRETORIO /bin
+1 - RODAR "MAKE"
+2 - O EXECUTAVEL SERA GERADO
 3 - FIM
 --------------------------------------------------------------------------------------------------------------------------
 INSTALANDO "MAKE" POR MEIO DO GERENCIADOR DE PACOTES "CHOCOLATEY" PARA WINDOWS
