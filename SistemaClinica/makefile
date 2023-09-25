@@ -19,4 +19,7 @@ $(OBJ_DIR)/consulta.o: $(SRC_DIR)/consulta.c $(INCLUDE_DIR)/cliutils.h $(INCLUDE
 	gcc -I $(INCLUDE_DIR) -c $< -o $@ -w
 
 $(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
+	mkdir $(OBJ_DIR)
+
+$(BIN_DIR):
+	mkdir $(BIN_DIR)
