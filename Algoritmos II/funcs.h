@@ -43,6 +43,8 @@ void listarConsultas();
 
 void desmarcarConsultaRemFis();
 
+void mapaHorarios();
+
 void listarConsultasCodCliente();
 
 void consultasHa6Meses();

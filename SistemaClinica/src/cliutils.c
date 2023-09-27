@@ -102,6 +102,10 @@ void menu() {
       case '6':
         desmarcarConsulta();
         break;
+        
+      case '7':
+    	mapaHorarios();
+        break;
 
       case '8':
         listarConsultasCodCliente();
