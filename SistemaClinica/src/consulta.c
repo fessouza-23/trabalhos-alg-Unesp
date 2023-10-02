@@ -418,7 +418,7 @@ void mapaHorarios() {
   printf("Digite o dia: ");
   scanf("%d", &dia);
 
-  printf("Digite o mes: ");
+  printf("Digite o mes (NUMERO DO MES): ");
   scanf("%d", &mes);
   	
   FILE *file;
