@@ -37,7 +37,3 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 5. Rodar "choco install make". Atenção: para instalar pacotes, o cmd/Powershell deve estar rodando como admin (SEM ASPAS)
 
 6. Após a instalação, basta executar o comando "make" no diretório do projeto (SEM ASPAS)
---------------------------------------------------------------------------------------------------------------------------
-caso necessite:
-executar na src para compilar informacoes e o icone do programa
-windres my.rc -o coff -o my.res
