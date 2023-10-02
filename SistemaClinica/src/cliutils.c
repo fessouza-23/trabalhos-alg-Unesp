@@ -57,6 +57,37 @@ void sobre() {
   system("pause");
 }
 
+void debugMenu() {
+  char op;
+
+  do {
+    system("cls");
+    printf("\e[?25l");
+    printf("================================  MENU  "
+           "=======================================\n");
+    printf("|ESC - Voltar ao menu principal |\n");
+    printf("1 - Listar clientes\n");
+    printf("2 - Listar consultas\n");
+    op = getch();
+
+    switch (op) {
+      case '1':
+        listarClientes();
+        break;
+
+      case '2':
+        listarConsultas();
+        break;
+
+      case 27: // Tecla ESC para sair
+        break;
+
+      default:
+        break;
+    }
+  } while (op != 27); // Continue até que a tecla ESC seja pressionada
+}
+
 //Cria o contexto do menu inicial
 void menu() {
   char op;
@@ -68,14 +99,13 @@ void menu() {
            "=======================================\n");
     printf("|ESC - Sair | F1 - Sobre o Programa|\n");
     printf("1 - Cadastrar cliente\n");
-    printf("2 - Listar clientes\n");
-    printf("3 - Atualizar cliente\n");
-    printf("4 - Marcar consulta\n");
-    printf("5 - Listar consultas\n");
-    printf("6 - Desmarcar consultas\n");
-    printf("7 - Mapa de horarios para um determinado dia\n");
-    printf("8 - Listar consulta por codigo de cliente\n");
-    printf("9 - Consultas de clientes com mais de 50 anos que ocorreram ha mais de 6 meses\n");
+    printf("2 - Alterar dados do cliente\n");
+    printf("3 - Marcar consulta\n");
+    printf("4 - Desmarcar consulta\n");
+    printf("5 - Mapa de horarios para um determinado dia\n");
+    printf("6 - Listar consulta por paciente\n");
+    printf("7 - Consultas de clientes com mais de 50 anos que ocorreram ha mais de 6 meses\n");
+    printf("8 - DEBUG - Funcoes de teste\n");
     op = getch();
 
     switch (op) {
@@ -84,35 +114,31 @@ void menu() {
         break;
 
       case '2':
-        listarClientes();
-        break;
-
-      case '3':
         atualizarCliente();
         break;
 
-      case '4':
+      case '3':
         marcarConsulta();
         break;
 
-      case '5':
-        listarConsultas();
-        break;
-
-      case '6':
+      case '4':
         desmarcarConsulta();
         break;
         
-      case '7':
-    	mapaHorarios();
+      case '5':
+    	  mapaHorarios();
         break;
 
-      case '8':
+      case '6':
         listarConsultasCodCliente();
         break;
 
-      case '9':
+      case '7':
         consultasHa6Meses();
+        break;
+
+      case '8':
+        debugMenu();
         break;
 
       case 27: // Tecla ESC para sair

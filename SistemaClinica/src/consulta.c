@@ -403,3 +403,58 @@ void consultasHa6Meses() {
   fclose(arquivoClientes);
   getch();
 }
+
+void mapaHorarios() {
+	system("cls");
+  int dia = 0, mes = 0;
+  int achouConsulta = 0; 
+
+  printf("Deseja listar o mapa de horarios (S\\N)?\n");
+  if (!confirma()) {
+    return;
+  }
+  
+  system("cls");
+  printf("Digite o dia: ");
+  scanf("%d", &dia);
+
+  printf("Digite o mes: ");
+  scanf("%d", &mes);
+  	
+  FILE *file;
+  Consulta consulta;
+
+  file = abrirArquivo("consultas.dat", "rb");
+
+  if (file == NULL) {
+    printf("Erro ao abrir o arquivo.\n");
+    return;
+  }
+
+  printf("================================= LISTA DE CONSULTAS PARA O DIA %d"
+         "==================================\n", dia);
+  printf("| %-8s | %-25s | %-10s | %-3s |\n", "Codigo", "Nome", "Data", "Horario");
+  printf("---------------------------------------------------------------\n");
+
+  while (fread(&consulta, sizeof(Consulta), 1, file) == 1) {
+  	
+    if (consulta.existe && consulta.dia == dia && consulta.mes == mes) {
+      printf("| %-8d | %-25s | %02d/%02d/%04d |  %02d:%02d  |\n",
+             consulta.codigo, consulta.nomeDoCliente,
+             consulta.dia, consulta.mes, consulta.ano,
+             consulta.hora, consulta.minuto);
+      achouConsulta = 1;
+    }
+    
+  }
+
+  fclose(file);
+
+  if (!achouConsulta) {
+  	
+    printf("Nenhuma consulta foi encontrada neste dia.\n");
+  }
+  
+  printf("\n");
+  system("pause");
+}
