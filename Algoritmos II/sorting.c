@@ -210,6 +210,7 @@ void callMergeSort(int vetoresAleatorios[linhas][n]) {
 }
 
 void vetorAleatorio() {
+  clock_t t;
   int i, j;
 
   system("cls");
@@ -224,18 +225,47 @@ void vetorAleatorio() {
     vetoresAleatorios[0][i] = rand() % maxValue + 1;
   }
 
-  // copia primeira linha para as sucessiva linhas
+  // copia primeira linha para as sucessivas linhas
   for (i = 1; i < linhas; i++) {
     for (j = 0; j < n; j++) {
       vetoresAleatorios[i][j] = vetoresAleatorios[0][j];
     }
   }
 
+  t = clock();
   selectionSort(vetoresAleatorios);
+  t = clock() - t;
+  double time_taken_selection = ((double)t) * 1000 / CLOCKS_PER_SEC; // in milliseconds
+  printf("selectionSort() took %f milliseconds to execute\n", time_taken_selection);
+
+  t = clock();
   bubbleSort(vetoresAleatorios);
+  t = clock() - t;
+  double time_taken_bubble = ((double)t) * 1000 / CLOCKS_PER_SEC; // in milliseconds
+  printf("bubbleSort() took %f milliseconds to execute\n", time_taken_bubble);
+
+  t = clock();
   insertionSort(vetoresAleatorios);
+  t = clock() - t;
+  double time_taken_insertion = ((double)t) * 1000 / CLOCKS_PER_SEC; // in milliseconds
+  printf("insertionSort() took %f milliseconds to execute\n", time_taken_insertion);
+
+  t = clock();
   shellSort(vetoresAleatorios);
+  t = clock() - t;
+  double time_taken_shell = ((double)t) * 1000 / CLOCKS_PER_SEC; // in milliseconds
+  printf("shellSort() took %f milliseconds to execute\n", time_taken_shell);
+
+  t = clock();
   callMergeSort(vetoresAleatorios);
+  t = clock() - t;
+  double time_taken_merge = ((double)t) * 1000 / CLOCKS_PER_SEC; // in milliseconds
+  printf("mergeSort() took %f milliseconds to execute\n", time_taken_merge);
+
+  // bubbleSort(vetoresAleatorios);
+  // insertionSort(vetoresAleatorios);
+  // shellSort(vetoresAleatorios);
+  // callMergeSort(vetoresAleatorios);
   // callQuickSort(vetoresAleatorios);
   system("pause");
 }
