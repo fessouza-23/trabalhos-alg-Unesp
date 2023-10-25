@@ -14,7 +14,7 @@
 int n;
 
 /*
-    Como funciona a organização da matriz de vetores
+    Como funciona a organização da matriz de vetores:
     Cada linha representa um vetor, estes vetores são iguais para cada linha,
     a fim de que cada algoritmo de ordenação trabalhe com a mesma aleatoriedade,
     fazendo com que as comparações sejam justas.
@@ -209,7 +209,7 @@ void callMergeSort(int vetoresAleatorios[linhas][n]) {
   printf("\ncomparacoes: %d\ntrocas: %d\n", comparacoes, trocas);
 }
 
-void gerarVetorAleatorio() {
+void vetorAleatorio() {
   int i, j;
 
   system("cls");
@@ -222,6 +222,45 @@ void gerarVetorAleatorio() {
   // gera primeira linha
   for (i = 0; i < n; i++) {
     vetoresAleatorios[0][i] = rand() % maxValue + 1;
+  }
+
+  // copia primeira linha para as sucessiva linhas
+  for (i = 1; i < linhas; i++) {
+    for (j = 0; j < n; j++) {
+      vetoresAleatorios[i][j] = vetoresAleatorios[0][j];
+    }
+  }
+
+  selectionSort(vetoresAleatorios);
+  bubbleSort(vetoresAleatorios);
+  insertionSort(vetoresAleatorios);
+  shellSort(vetoresAleatorios);
+  callMergeSort(vetoresAleatorios);
+  // callQuickSort(vetoresAleatorios);
+  system("pause");
+}
+
+void vetorCrescente() {
+  int i, j;
+
+  system("cls");
+
+  printf("Quantidade de elementos: ");
+  scanf("%d", &n);
+
+  int vetoresAleatorios[linhas][n];
+
+  // gera primeira linha
+  for (i = 0; i < n; i++) {
+    vetoresAleatorios[0][i] = rand() % maxValue + 1;
+  }
+
+  for (i = 0; i < n; i++) {
+    for (j = i + 1; j < n; j++) {
+      if (vetoresAleatorios[0][i] > vetoresAleatorios[0][j]) {
+        troca(&vetoresAleatorios[0][i], &vetoresAleatorios[0][j]);
+      }
+    }
   }
 
   // copia primeira linha para as sucessiva linhas
@@ -262,10 +301,11 @@ int main() {
 
     switch (c) {
     case '1':
-      gerarVetorAleatorio();
+      vetorAleatorio();
       break;
 
     case '2':
+      vetorCrescente();
       break;
 
     case '3':
