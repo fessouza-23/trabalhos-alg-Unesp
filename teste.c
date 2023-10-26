@@ -1,11 +1,8 @@
 #include <conio.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/time.h>
 #include <time.h>
 #include <windows.h>
-
-#define BILLION 1000000000.0
 
 #define ESC 27
 #define F1 59
