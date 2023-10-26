@@ -355,24 +355,56 @@ void vetorAleatorio() {
 }
 
 void vetorCrescente() {
-  int i, j;
-  char c;
+  int i = 0, j;
   FILE *file;
+  char c;
 
   system("cls");
+  do {
+    printf("================================  VETOR CRESCENTE "
+           "=======================================\n");
+    printf("Selecionar tamanho do vetor: \n");
+    printf("|ESC - Voltar |\n");
+    printf("1 - 10 Valores\n");
+    printf("2 - 100 Valores\n");
+    printf("3 - 1000 Valores\n");
+    c = getch();
 
-  n = 10;
+    if ((c < '1' || c > '4') && c != ESC && c != 0 && c != F1 && c != F2) {
+      printf("Valor invalido.\n");
+      system("pause");
+    }
+
+    if (c == ESC) {
+      return;
+    }
+
+    switch (c) {
+    case '1':
+      n = 10;
+      break;
+
+    case '2':
+      n = 100;
+      break;
+
+    case '3':
+      n = 1000;
+      break;
+    }
+  } while ((c < '1' || c > '3') && c != ESC);
 
   int vetoresAleatorios[linhas][n];
 
-  if ((file = fopen("10_random_values.txt", "r")) == NULL) {
-    printf("Erro ao abrir o arquivo.\n");
-    return;
-    getch();
+  if (n == 10) {
+    file = abrirArquivo("10_random_values.txt", "r");
+  } else if (n == 100) {
+    file = abrirArquivo("100_random_values.txt", "r");
+  } else {
+    file = abrirArquivo("1000_random_values.txt", "r");
   }
 
-  while ((c = fgetc(file)) != EOF) {
-    vetoresAleatorios[0][i] = c;
+  while (fscanf(file, "%d", &vetoresAleatorios[0][i]) == 1) {
     i++;
   }
 
@@ -393,12 +425,18 @@ void vetorCrescente() {
     }
   }
 
-  selectionSort(vetoresAleatorios);
-  bubbleSort(vetoresAleatorios);
-  insertionSort(vetoresAleatorios);
-  shellSort(vetoresAleatorios);
-  callMergeSort(vetoresAleatorios);
-  // callQuickSort(vetoresAleatorios);
+  system("cls");
+
+  for (i = 0; i < linhas; i++) {
+    printf("Linha %d: ", i);
+    for (j = 0; j < n; j++) {
+      printf("%d ", vetoresAleatorios[i][j]);
+    }
+    printf("\n\n");
+  }
+
+  callSortingFuncs(vetoresAleatorios);
+
   system("pause");
 }
 
