@@ -1,7 +1,5 @@
 #include <conio.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 #include <windows.h>
 
 #define ESC 27
@@ -9,7 +7,6 @@
 #define F2 60
 
 #define linhas 6
-#define maxValue 1000
 
 // Variáveis globais
 int n;
@@ -211,7 +208,9 @@ void callMergeSort(int vetoresAleatorios[linhas][n]) {
 }
 
 void vetorAleatorio() {
-  int i, j;
+  int i = 0, j;
+  FILE *file;
+  char c;
 
   LARGE_INTEGER frequency;
   LARGE_INTEGER start;
@@ -221,23 +220,37 @@ void vetorAleatorio() {
   // Obtém a frequência do contador de desempenho
   QueryPerformanceFrequency(&frequency);
 
-  system("cls");
-
-  printf("Quantidade de elementos: ");
-  scanf("%d", &n);
+  n = 10;
 
   int vetoresAleatorios[linhas][n];
 
-  // gera primeira linha
-  for (i = 0; i < n; i++) {
-    vetoresAleatorios[0][i] = rand() % maxValue + 1;
+  if ((file = fopen("10_random_values.txt", "r")) == NULL) {
+    printf("Erro ao abrir o arquivo.\n");
+    return;
+    getch();
   }
+
+  while (fscanf(file, "%d", &vetoresAleatorios[0][i]) == 1) {
+    i++;
+  }
+
+  fclose(file);
 
   // copia primeira linha para as sucessivas linhas
   for (i = 1; i < linhas; i++) {
     for (j = 0; j < n; j++) {
       vetoresAleatorios[i][j] = vetoresAleatorios[0][j];
     }
+  }
+
+  system("cls");
+
+  for (i = 0; i < linhas; i++) {
+    printf("Linha %d: ", i);
+    for (j = 0; j < n; j++) {
+      printf("%d ", vetoresAleatorios[i][j]);
+    }
+    printf("\n");
   }
 
   // Marca o início do intervalo que você deseja medir
@@ -290,18 +303,27 @@ void vetorAleatorio() {
 
 void vetorCrescente() {
   int i, j;
+  char c;
+  FILE *file;
 
   system("cls");
 
-  printf("Quantidade de elementos: ");
-  scanf("%d", &n);
+  n = 10;
 
   int vetoresAleatorios[linhas][n];
 
-  // gera primeira linha
-  for (i = 0; i < n; i++) {
-    vetoresAleatorios[0][i] = rand() % maxValue + 1;
+  if ((file = fopen("10_random_values.txt", "r")) == NULL) {
+    printf("Erro ao abrir o arquivo.\n");
+    return;
+    getch();
   }
+
+  while ((c = fgetc(file)) != EOF) {
+    vetoresAleatorios[0][i] = c;
+    i++;
+  }
+
+  fclose(file);
 
   for (i = 0; i < n; i++) {
     for (j = i + 1; j < n; j++) {
@@ -329,7 +351,6 @@ void vetorCrescente() {
 
 int main() {
   char c;
-  srand(time(NULL));
 
   do {
     system("cls");
