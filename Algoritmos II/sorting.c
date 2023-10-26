@@ -1,14 +1,12 @@
 #include <conio.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include <windows.h>
 
 #define ESC 27
 #define F1 59
 #define F2 60
 
 #define linhas 6
-#define maxValue 1000
 
 // Variáveis globais
 int n;
@@ -27,6 +25,15 @@ int n;
     4. QuickSort
     5. DropSort
 */
+
+FILE *abrirArquivo(const char *nomeArquivo, const char *modo) {
+  FILE *arquivo = fopen(nomeArquivo, modo);
+  if (arquivo == NULL) {
+    printf("Erro ao abrir o arquivo %s.\n", nomeArquivo);
+    exit(EXIT_FAILURE);
+  }
+  return arquivo;
+}
 
 void sobre() {
   system("cls");
@@ -209,21 +216,121 @@ void callMergeSort(int vetoresAleatorios[linhas][n]) {
   printf("\ncomparacoes: %d\ntrocas: %d\n", comparacoes, trocas);
 }
 
+/*
+  Função para chamar todas as funções de ordenação de uma vez só
+  e evitar repetição de código para cada tipo de vetor (aleatorio, crescente,
+  decrescente, parcialmente ordenado)
+*/
+void callSortingFuncs(int vetoresAleatorios[linhas][n]) {
+  LARGE_INTEGER frequency;
+  LARGE_INTEGER start;
+  LARGE_INTEGER end;
+  double elapsed_time;
+
+  // Obtém a frequência do contador de desempenho
+  QueryPerformanceFrequency(&frequency);
+
+  // Marca o início do intervalo que você deseja medir
+  QueryPerformanceCounter(&start);
+
+  // Função de ordenação que está contando o tempo
+  selectionSort(vetoresAleatorios);
+
+  // Marca o final do intervalo que você deseja medir
+  QueryPerformanceCounter(&end);
+
+  // Calcula o tempo decorrido em segundos
+  elapsed_time = (double)(end.QuadPart - start.QuadPart) / frequency.QuadPart;
+
+  // Calcula o tempo decorrido em milissegundos
+  elapsed_time *= 1000;
+
+  printf("Tempo decorrido: %f milissegundos\n", elapsed_time);
+
+  QueryPerformanceCounter(&start);
+  bubbleSort(vetoresAleatorios);
+  QueryPerformanceCounter(&end);
+  elapsed_time = (double)(end.QuadPart - start.QuadPart) / frequency.QuadPart;
+  elapsed_time *= 1000;
+  printf("Tempo decorrido: %f milissegundos\n", elapsed_time);
+
+  QueryPerformanceCounter(&start);
+  insertionSort(vetoresAleatorios);
+  QueryPerformanceCounter(&end);
+  elapsed_time = (double)(end.QuadPart - start.QuadPart) / frequency.QuadPart;
+  elapsed_time *= 1000;
+  printf("Tempo decorrido: %f milissegundos\n", elapsed_time);
+
+  QueryPerformanceCounter(&start);
+  shellSort(vetoresAleatorios);
+  QueryPerformanceCounter(&end);
+  elapsed_time = (double)(end.QuadPart - start.QuadPart) / frequency.QuadPart;
+  elapsed_time *= 1000;
+  printf("Tempo decorrido: %f milissegundos\n", elapsed_time);
+
+  QueryPerformanceCounter(&start);
+  callMergeSort(vetoresAleatorios);
+  QueryPerformanceCounter(&end);
+  elapsed_time = (double)(end.QuadPart - start.QuadPart) / frequency.QuadPart;
+  elapsed_time *= 1000;
+  printf("Tempo decorrido: %f milissegundos\n", elapsed_time);
+}
+
 void vetorAleatorio() {
-  clock_t t;
-  int i, j;
+  int i = 0, j;
+  FILE *file;
+  char c;
 
   system("cls");
+  do {
+    printf("================================  VETOR ALEATORIO "
+           "=======================================\n");
+    printf("Selecionar tamanho do vetor: \n");
+    printf("|ESC - Voltar |\n");
+    printf("1 - 10 Valores\n");
+    printf("2 - 100 Valores\n");
+    printf("3 - 1000 Valores\n");
+    c = getch();
 
-  printf("Quantidade de elementos: ");
-  scanf("%d", &n);
+    if ((c < '1' || c > '4') && c != ESC && c != 0 && c != F1 && c != F2) {
+      printf("Valor invalido.\n");
+      system("pause");
+    }
+
+    if (c == ESC) {
+      return;
+    }
+
+    switch (c) {
+    case '1':
+      n = 10;
+      break;
+
+    case '2':
+      n = 100;
+      break;
+
+    case '3':
+      n = 1000;
+      break;
+    }
+  } while ((c < '1' || c > '3') && c != ESC);
 
   int vetoresAleatorios[linhas][n];
 
-  // gera primeira linha
-  for (i = 0; i < n; i++) {
-    vetoresAleatorios[0][i] = rand() % maxValue + 1;
+  if (n == 10) {
+    file = abrirArquivo("10_random_values.txt", "r");
+  } else if (n == 100) {
+    file = abrirArquivo("100_random_values.txt", "r");
+  } else {
+    file = abrirArquivo("1000_random_values.txt", "r");
   }
+
+  while (fscanf(file, "%d", &vetoresAleatorios[0][i]) == 1) {
+    i++;
+  }
+
+  fclose(file);
 
   // copia primeira linha para as sucessivas linhas
   for (i = 1; i < linhas; i++) {
@@ -232,58 +339,76 @@ void vetorAleatorio() {
     }
   }
 
-  t = clock();
-  selectionSort(vetoresAleatorios);
-  t = clock() - t;
-  double time_taken_selection = ((double)t) * 1000 / CLOCKS_PER_SEC; // in milliseconds
-  printf("selectionSort() took %f milliseconds to execute\n", time_taken_selection);
+  system("cls");
 
-  t = clock();
-  bubbleSort(vetoresAleatorios);
-  t = clock() - t;
-  double time_taken_bubble = ((double)t) * 1000 / CLOCKS_PER_SEC; // in milliseconds
-  printf("bubbleSort() took %f milliseconds to execute\n", time_taken_bubble);
+  for (i = 0; i < linhas; i++) {
+    printf("Linha %d: ", i);
+    for (j = 0; j < n; j++) {
+      printf("%d ", vetoresAleatorios[i][j]);
+    }
+    printf("\n\n");
+  }
 
-  t = clock();
-  insertionSort(vetoresAleatorios);
-  t = clock() - t;
-  double time_taken_insertion = ((double)t) * 1000 / CLOCKS_PER_SEC; // in milliseconds
-  printf("insertionSort() took %f milliseconds to execute\n", time_taken_insertion);
+  callSortingFuncs(vetoresAleatorios);
 
-  t = clock();
-  shellSort(vetoresAleatorios);
-  t = clock() - t;
-  double time_taken_shell = ((double)t) * 1000 / CLOCKS_PER_SEC; // in milliseconds
-  printf("shellSort() took %f milliseconds to execute\n", time_taken_shell);
-
-  t = clock();
-  callMergeSort(vetoresAleatorios);
-  t = clock() - t;
-  double time_taken_merge = ((double)t) * 1000 / CLOCKS_PER_SEC; // in milliseconds
-  printf("mergeSort() took %f milliseconds to execute\n", time_taken_merge);
-
-  // bubbleSort(vetoresAleatorios);
-  // insertionSort(vetoresAleatorios);
-  // shellSort(vetoresAleatorios);
-  // callMergeSort(vetoresAleatorios);
-  // callQuickSort(vetoresAleatorios);
   system("pause");
 }
 
 void vetorCrescente() {
-  int i, j;
+  int i = 0, j;
+  FILE *file;
+  char c;
 
   system("cls");
+  do {
+    printf("================================  VETOR CRESCENTE "
+           "=======================================\n");
+    printf("Selecionar tamanho do vetor: \n");
+    printf("|ESC - Voltar |\n");
+    printf("1 - 10 Valores\n");
+    printf("2 - 100 Valores\n");
+    printf("3 - 1000 Valores\n");
+    c = getch();
 
-  printf("Quantidade de elementos: ");
-  scanf("%d", &n);
+    if ((c < '1' || c > '4') && c != ESC && c != 0 && c != F1 && c != F2) {
+      printf("Valor invalido.\n");
+      system("pause");
+    }
+
+    if (c == ESC) {
+      return;
+    }
+
+    switch (c) {
+    case '1':
+      n = 10;
+      break;
+
+    case '2':
+      n = 100;
+      break;
+
+    case '3':
+      n = 1000;
+      break;
+    }
+  } while ((c < '1' || c > '3') && c != ESC);
 
   int vetoresAleatorios[linhas][n];
 
-  // gera primeira linha
-  for (i = 0; i < n; i++) {
-    vetoresAleatorios[0][i] = rand() % maxValue + 1;
+  if (n == 10) {
+    file = abrirArquivo("10_random_values.txt", "r");
+  } else if (n == 100) {
+    file = abrirArquivo("100_random_values.txt", "r");
+  } else {
+    file = abrirArquivo("1000_random_values.txt", "r");
   }
+
+  while (fscanf(file, "%d", &vetoresAleatorios[0][i]) == 1) {
+    i++;
+  }
+
+  fclose(file);
 
   for (i = 0; i < n; i++) {
     for (j = i + 1; j < n; j++) {
@@ -300,18 +425,23 @@ void vetorCrescente() {
     }
   }
 
-  selectionSort(vetoresAleatorios);
-  bubbleSort(vetoresAleatorios);
-  insertionSort(vetoresAleatorios);
-  shellSort(vetoresAleatorios);
-  callMergeSort(vetoresAleatorios);
-  // callQuickSort(vetoresAleatorios);
+  system("cls");
+
+  for (i = 0; i < linhas; i++) {
+    printf("Linha %d: ", i);
+    for (j = 0; j < n; j++) {
+      printf("%d ", vetoresAleatorios[i][j]);
+    }
+    printf("\n\n");
+  }
+
+  callSortingFuncs(vetoresAleatorios);
+
   system("pause");
 }
 
 int main() {
   char c;
-  srand(time(NULL));
 
   do {
     system("cls");
