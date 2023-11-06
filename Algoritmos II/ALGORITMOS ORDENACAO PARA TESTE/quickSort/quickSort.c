@@ -174,6 +174,7 @@ int main()
     file = criarArquivo("10_random_values.txt", "w"); 
 
     while (k <= 50) {
+        comps = trocas = 0;
         quickSort(vet1, 0, n1-1);
         fprintf(file, "Comparacoes = %4d; Trocas = %4d; Tempo = %lf\n", comps, trocas, elapsed_time);
         k++;
@@ -190,6 +191,7 @@ int main()
     file = criarArquivo("100_random_values.txt", "w");
 
     while (k <= 50) {
+        comps = trocas = 0;
         quickSort(vet2, 0, n2-1);
         fprintf(file, "Comparacoes = %4d; Trocas = %4d Tempo = %lf\n", comps, trocas, elapsed_time);
         k++;
@@ -206,6 +208,7 @@ int main()
     file = criarArquivo("1000_random_values.txt", "w");
 
     while (k <= 50) { 
+        comps = trocas = 0;
         quickSort(vet3, 0, n3-1);
         fprintf(file, "Comparacoes = %4d; Trocas = %4d Tempo = %lf\n", comps, trocas, elapsed_time);
         k++;
@@ -222,6 +225,7 @@ int main()
     file = criarArquivo("10000_random_values.txt", "w");
 
     while (k <= 50) {
+        comps = trocas = 0;
         quickSort(vet4, 0, n4-1);
         fprintf(file, "Comparacoes = %4d; Trocas = %4d Tempo = %lf\n", comps, trocas, elapsed_time);
         k++;
