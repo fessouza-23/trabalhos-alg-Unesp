@@ -1,4 +1,5 @@
 #include <conio.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <windows.h>
 
@@ -6,7 +7,7 @@
 #define F1 59
 #define F2 60
 
-#define linhas 6
+#define linhas 9
 
 // Variáveis globais
 int n;
@@ -21,9 +22,12 @@ int n;
     0. SelectionSort
     1. BubbleSort
     2. InsertionSort
-    3. MergeSort
-    4. QuickSort
-    5. DropSort
+    3. ShellSort
+    4. MergeSort
+    5. QuickSort
+    6. DropSort
+    7. DropSort Recent Memory
+    8. DropSort Double Comparisons
 */
 
 FILE *abrirArquivo(const char *nomeArquivo, const char *modo) {
@@ -216,6 +220,119 @@ void callMergeSort(int vetoresAleatorios[linhas][n]) {
   printf("\ncomparacoes: %d\ntrocas: %d\n", comparacoes, trocas);
 }
 
+void quickSort(int arr[], int left, int right, int *comparacoes, int *trocas) {
+  int i = left, j = right;
+  int pivot = arr[(left + right) / 2];
+
+  while (i <= j) {
+    while (arr[i] < pivot) {
+      (*comparacoes)++;
+      i++;
+    }
+    while (arr[j] > pivot) {
+      (*comparacoes)++;
+      j--;
+    }
+    if (i <= j) {
+      (*trocas)++;
+      troca(&arr[i], &arr[j]);
+      i++;
+      j--;
+    }
+  }
+
+  if (left < j) {
+    quickSort(arr, left, j, comparacoes, trocas);
+  }
+  if (i < right) {
+    quickSort(arr, i, right, comparacoes, trocas);
+  }
+}
+
+void callQuickSort(int vetoresAleatorios[linhas][n]) {
+  int i, comparacoes = 0, trocas = 0;
+  for (i = 0; i < n; i++) {
+    quickSort(vetoresAleatorios[5], 0, n - 1, &comparacoes, &trocas);
+  }
+
+  printf("\n=============================  QUICKSORT  "
+         "====================================\n");
+
+  printf("\ncomparacoes: %d\ntrocas: %d\n", comparacoes, trocas);
+}
+
+/*
+// Dropsort original
+void dropSort(int vetoresAleatorios[linhas][n]) {
+  int i, j = 1, previousInt = vetoresAleatorios[6][0];
+  int trocas = 0, comparacoes = 0;
+
+  for (i = 1; i < n; i++) {
+    comparacoes++;
+    if (vetoresAleatorios[6][i] >= previousInt) {
+      vetoresAleatorios[6][j] = vetoresAleatorios[6][i];
+      previousInt = vetoresAleatorios[6][i];
+      j++;
+    }
+  }
+
+  // Atualiza o tamanho do vetor após a ordenação
+  n = j;
+
+  printf("\n=============================  DROP SORT  "
+         "====================================\n");
+
+  printf("\ncomparacoes: %d\ntrocas: %d\n", comparacoes, trocas);
+}
+
+void dropSortRecentMemory(int vetoresAleatorios[linhas][n]) {
+  int newSize = 1, i, count = 0, previousInt = vetoresAleatorios[7][0];
+  int comps = 0, trocas = 0;
+
+  for (i = 1; i < n; ++i) {
+    comps++;
+    if (arr[i] >= previousInt) {
+      ++newSize;
+      arr[newSize - 1] = arr[i];
+      previousInt = arr[i];
+      trocas++;
+    } else {
+      count++;
+      if (count >= 4) {
+        arr[newSize - 1] = arr[i];
+        trocas++;
+      }
+    }
+  }
+
+  printf("\n=============================  DROP SORT RECENT MEMORY  "
+         "====================================\n");
+
+  printf("\ncomparacoes: %d\ntrocas: %d\n", comps, trocas);
+}
+
+void dropSortDoubleComparison(int *arr, int size) {
+  int newSize = 1, i;
+  int comps = 0, trocas = 0;
+
+  for (i = 1; i < size; ++i) {
+    comps++;
+    if (arr[i] >= arr[newSize - 1] &&
+        (i + 1 < size ? arr[i] <= arr[i + 1] : true)) {
+      ++newSize;
+      arr[newSize - 1] = arr[i];
+      trocas++;
+    } else {
+      comps++;
+    }
+  }
+
+  printf("\n=============================  DROP SORT DOUBLE COMPARISON "
+         "====================================\n");
+
+  printf("\ncomparacoes: %d\ntrocas: %d\n", comps, trocas);
+}
+*/
 /*
   Função para chamar todas as funções de ordenação de uma vez só
   e evitar repetição de código para cada tipo de vetor (aleatorio, crescente,
@@ -270,6 +387,13 @@ void callSortingFuncs(int vetoresAleatorios[linhas][n]) {
 
   QueryPerformanceCounter(&start);
   callMergeSort(vetoresAleatorios);
+  QueryPerformanceCounter(&end);
+  elapsed_time = (double)(end.QuadPart - start.QuadPart) / frequency.QuadPart;
+  elapsed_time *= 1000;
+  printf("Tempo decorrido: %f milissegundos\n", elapsed_time);
+
+  QueryPerformanceCounter(&start);
+  callQuickSort(vetoresAleatorios);
   QueryPerformanceCounter(&end);
   elapsed_time = (double)(end.QuadPart - start.QuadPart) / frequency.QuadPart;
   elapsed_time *= 1000;
