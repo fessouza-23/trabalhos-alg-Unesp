@@ -10,7 +10,7 @@
 #define linhas 9
 
 // Variáveis globais
-int n;
+int n; // tamanho do vetor
 
 /*
     Como funciona a organização da matriz de vetores:
@@ -261,30 +261,55 @@ void callQuickSort(int vetoresAleatorios[linhas][n]) {
   printf("\ncomparacoes: %d\ntrocas: %d\n", comparacoes, trocas);
 }
 
-/*
-// Dropsort original
 void dropSort(int vetoresAleatorios[linhas][n]) {
   int i, j = 1, previousInt = vetoresAleatorios[6][0];
-  int trocas = 0, comparacoes = 0;
+  int trocas = 0, comparacoes = 0, retidos = 1;
+  int *newVet = malloc(sizeof(int)); // Aloca memória para o vetor dinâmico
+  int tam = 1;
+
+  newVet[0] = vetoresAleatorios[6][0];
+
+  if (newVet == NULL) {
+    printf("Erro ao alocar memória para o vetor\n");
+    return;
+  }
 
   for (i = 1; i < n; i++) {
     comparacoes++;
     if (vetoresAleatorios[6][i] >= previousInt) {
-      vetoresAleatorios[6][j] = vetoresAleatorios[6][i];
+      newVet[j] = vetoresAleatorios[6][i];
       previousInt = vetoresAleatorios[6][i];
       j++;
+
+      // Aumenta o tamanho do vetor dinâmico usando realloc
+      int *temp = realloc(newVet, (j + 1) * sizeof(int));
+      retidos++;
+      if (temp == NULL) {
+        printf("Erro ao realocar memória para o vetor\n");
+        free(newVet); // Libera a memória alocada anteriormente
+        return;
+      }
+      newVet = temp;
     }
   }
 
   // Atualiza o tamanho do vetor após a ordenação
-  n = j;
+  tam = j;
 
+  // Imprime o vetor após a ordenação
   printf("\n=============================  DROP SORT  "
          "====================================\n");
+  for (i = 0; i < tam; i++) {
+    printf("%d ", newVet[i]);
+  }
+  printf("\ncomparacoes: %d\ntrocas: %d\ntamanho: %d\n", comparacoes, trocas,
+retidos);
 
-  printf("\ncomparacoes: %d\ntrocas: %d\n", comparacoes, trocas);
+  // Libera a memória alocada para o vetor dinâmico
+  free(newVet);
 }
 
+/*
 void dropSortRecentMemory(int vetoresAleatorios[linhas][n]) {
   int newSize = 1, i, count = 0, previousInt = vetoresAleatorios[7][0];
   int comps = 0, trocas = 0;
@@ -394,6 +419,13 @@ void callSortingFuncs(int vetoresAleatorios[linhas][n]) {
 
   QueryPerformanceCounter(&start);
   callQuickSort(vetoresAleatorios);
+  QueryPerformanceCounter(&end);
+  elapsed_time = (double)(end.QuadPart - start.QuadPart) / frequency.QuadPart;
+  elapsed_time *= 1000;
+  printf("Tempo decorrido: %f milissegundos\n", elapsed_time);
+
+  QueryPerformanceCounter(&start);
+  dropSort(vetoresAleatorios);
   QueryPerformanceCounter(&end);
   elapsed_time = (double)(end.QuadPart - start.QuadPart) / frequency.QuadPart;
   elapsed_time *= 1000;
