@@ -1,46 +1,57 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void bead_sort(int *a, int len) {
-  int i, j, max, sum;
-  unsigned char *beads;
+int comparacoes = 0;
+int trocas = 0;
 
-  // Define uma macro para acessar elementos no array de beads
-#define BEAD(i, j) beads[i * max + j]
+void ordenacao_por_contas(int *a, int len) {
+  int i, j, max, soma;
+  unsigned char *contas;
+
+  // Define uma macro para acessar elementos no array de contas
+#define CONTA(i, j) contas[i * max + j]
 
   // Encontra o elemento máximo no array
-  for (i = 1, max = a[0]; i < len; i++)
-    if (a[i] > max)
+  for (i = 1, max = a[0]; i < len; i++) {
+    comparacoes++;
+    if (a[i] > max) {
       max = a[i];
+    }
+  }
 
-  // Aloca memória para o array de beads
-  beads = calloc(1, max * len);
+  // Aloca memória para o array de contas
+  contas = calloc(1, max * len);
 
-  // Marca as beads
-  for (i = 0; i < len; i++)
-    for (j = 0; j < a[i]; j++)
-      BEAD(i, j) = 1;
+  // Marca as contas
+  for (i = 0; i < len; i++) {
+    for (j = 0; j < a[i]; j++) {
+      CONTA(i, j) = 1;
+    }
+  }
 
-  // Conta o número de beads em cada poste
+  // Conta o número de contas em cada poste
   for (j = 0; j < max; j++) {
-    for (sum = i = 0; i < len; i++) {
-      sum += BEAD(i, j);
-      BEAD(i, j) = 0;
+    for (soma = i = 0; i < len; i++) {
+      soma += CONTA(i, j);
+      CONTA(i, j) = 0;
+      trocas++;
     }
 
-    // Marca as beads na parte inferior
-    for (i = len - sum; i < len; i++)
-      BEAD(i, j) = 1;
+    // Marca as contas na parte inferior
+    for (i = len - soma; i < len; i++) {
+      CONTA(i, j) = 1;
+      trocas++;
+    }
   }
 
   // Atribui os valores ordenados de volta ao array
   for (i = 0; i < len; i++) {
-    for (j = 0; j < max && BEAD(i, j); j++);
+    for (j = 0; j < max && CONTA(i, j); j++);
     a[i] = j;
   }
 
   // Libera a memória alocada
-  free(beads);
+  free(contas);
 }
 
 int main() {
@@ -51,11 +62,14 @@ int main() {
   for (i = 0; i < len; i++)
     printf("%d%s", x[i], i == len - 1 ? "\n" : " ");
 
-  bead_sort(x, len);
+  ordenacao_por_contas(x, len);
 
   printf("\nArray Ordenado:\n");
   for (i = 0; i < len; i++)
     printf(" %d", x[i]);
+
+  printf("\nComparacoes: %d", comparacoes);
+  printf("\nTrocas: %d", trocas);
 
   return 0;
 }
