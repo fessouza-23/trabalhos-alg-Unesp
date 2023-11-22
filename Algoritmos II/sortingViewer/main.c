@@ -8,12 +8,6 @@
     #include <unistd.h>
 #endif
 
-/*
-* FAZER: 
-* Criar menu para que seja possível escolher vetores em ordem completamente aleatória, em ordem
-* crescente, em ordem decrescente e quase ordenado.
-*/
-
 /* 
 * Sorting Benchmark Viewer - Visualizador de performance para algoritmos de ordenação  
 * Este programa realiza um teste de perfomance para 7 tipos diferentes de algoritmos
