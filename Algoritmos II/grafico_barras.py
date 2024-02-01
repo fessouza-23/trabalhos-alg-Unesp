@@ -1,55 +1,29 @@
 import matplotlib.pyplot as plt
 
-# Dados dos algoritmos de ordenação para diferentes tamanhos de vetor
-algoritmos = ['Selection Sort', 'Bubble Sort', 'Insertion Sort', 'Shell Sort', 'Merge Sort', 'Drop Sort', 'Drop Sort (Recente Memory)', 'Drop Sort (Double Comparison)']
-comparacoes_10 = [45, 35, 9, 22, 194, 9, 2, 9]  # Número de comparações para vetor de 10 elementos
-comparacoes_100 = [4950, 4929, 99, 503, 35790, 99, 45 ,99]  # Número de comparações para vetor de 100 elementos
-comparacoes_1000 = [499500, 499409, 999, 8006, 5047658, 999, 516, 999]  # Número de comparações para vetor de 1000 elementos
+# Substitua essas listas pelos seus dados reais
+tamanhos_vetor = [10, 100, 500, 1000, 5000]
+tempos_selection_sort = [tempo_10_selection, tempo_100_selection, tempo_500_selection, tempo_1000_selection, tempo_5000_selection]
+tempos_insertion_sort = [tempo_10_insertion, tempo_100_insertion, tempo_500_insertion, tempo_1000_insertion, tempo_5000_insertion]
+tempos_bubble_sort = [tempo_10_bubble, tempo_100_bubble, tempo_500_bubble, tempo_1000_bubble, tempo_5000_bubble]
+tempos_shell_sort = [tempo_10_shell, tempo_100_shell, tempo_500_shell, tempo_1000_shell, tempo_5000_shell]
+tempos_merge_sort = [tempo_10_merge, tempo_100_merge, tempo_500_merge, tempo_1000_merge, tempo_5000_merge]
+tempos_quick_sort = [tempo_10_quick, tempo_100_quick, tempo_500_quick, tempo_1000_quick, tempo_5000_quick]
+tempos_bead_sort = [tempo_10_bead, tempo_100_bead, tempo_500_bead, tempo_1000_bead, tempo_5000_bead]
 
-# Lista de cores para as barras em hexadecimal
-cores = ['#ffb972', '#ffda5f', '#002475', '#006dae', '#00cce8']
+# Criação do gráfico
+plt.figure(figsize=(10, 6))
 
-# Criando subplots para cada tamanho de vetor
-fig, axs = plt.subplots(1, 3, figsize=(18, 6))
+plt.plot(tamanhos_vetor, tempos_selection_sort, label='Selection Sort')
+plt.plot(tamanhos_vetor, tempos_insertion_sort, label='Insertion Sort')
+plt.plot(tamanhos_vetor, tempos_bubble_sort, label='Bubble Sort')
+plt.plot(tamanhos_vetor, tempos_shell_sort, label='Shell Sort')
+plt.plot(tamanhos_vetor, tempos_merge_sort, label='Merge Sort')
+plt.plot(tamanhos_vetor, tempos_quick_sort, label='Quick Sort')
+plt.plot(tamanhos_vetor, tempos_bead_sort, label='Bead Sort')
 
-# Gráfico para vetor de 10 elementos
-bars_10 = axs[0].bar(algoritmos, comparacoes_10, color=cores)
-axs[0].set_ylabel('Número de Comparações')
-axs[0].set_title('Vetor de 10 Elementos')
-axs[0].tick_params(axis='x', rotation=45)
-
-# Gráfico para vetor de 100 elementos
-bars_100 = axs[1].bar(algoritmos, comparacoes_100, color=cores)
-axs[1].set_ylabel('Número de Comparações')
-axs[1].set_title('Vetor de 100 Elementos')
-axs[1].tick_params(axis='x', rotation=45)
-
-# Gráfico para vetor de 1000 elementos
-bars_1000 = axs[2].bar(algoritmos, comparacoes_1000, color=cores)
-axs[2].set_ylabel('Número de Comparações')
-axs[2].set_title('Vetor de 1000 Elementos')
-axs[2].tick_params(axis='x', rotation=45)
-
-# Adicionando rótulos acima das barras
-def autolabel(bars, ax):
-    for bar in bars:
-        height = bar.get_height()
-        ax.annotate('{}'.format(height),
-                    xy=(bar.get_x() + bar.get_width() / 2, height),
-                    xytext=(0, 3),  # 3 points vertical offset
-                    textcoords="offset points",
-                    ha='center', va='bottom')
-
-autolabel(bars_10, axs[0])
-autolabel(bars_100, axs[1])
-autolabel(bars_1000, axs[2])
-
-# Desativando a notação científica no eixo y
-for ax in axs:
-    ax.ticklabel_format(axis='y', style='plain')
-
-# Ajustando o layout
-plt.tight_layout()
-
-# Exibindo os gráficos
+plt.xlabel('Tamanho do Vetor')
+plt.ylabel('Tempo (s)')
+plt.title('Desempenho dos Algoritmos de Ordenação')
+plt.legend()
+plt.grid(True)
 plt.show()
